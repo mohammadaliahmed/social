@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Social</string>
+    <string name="error_gif">x or y bound size should be at least %1$dpx and file size should be no more than %2$sM</string>
+    <string name="file_limit_size_upload_format">Files must be less than %sMB</string>
+    <string name="video_compression_complete">Video Compression Complete</string>
+
+
+</resources>

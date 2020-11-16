@@ -17,12 +17,15 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.appsinventiv.social.Activities.MainActivity;
 import com.appsinventiv.social.Models.StoryModel;
+import com.appsinventiv.social.NetworkResponses.ApiResponse;
+import com.appsinventiv.social.NetworkResponses.NewMessageResponse;
 import com.appsinventiv.social.R;
 import com.appsinventiv.social.Utils.AppConfig;
 import com.appsinventiv.social.Utils.CommonUtils;
@@ -49,6 +52,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 import jp.shts.android.storiesprogressview.StoriesProgressView;
 import okhttp3.ResponseBody;
@@ -63,6 +67,7 @@ public class StoryFragment extends Fragment implements StoriesProgressView.Stori
     Context context;
 
 
+    RelativeLayout storyyy;
     int position;
 
     private int PROGRESS_COUNT = 0;
@@ -153,6 +158,7 @@ public class StoryFragment extends Fragment implements StoriesProgressView.Stori
                              Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.activity_story, null);
+        storyyy = rootView.findViewById(R.id.storyyy);
         userPic = rootView.findViewById(R.id.userPic);
         storyByPic = rootView.findViewById(R.id.storyByPic);
         storyByName = rootView.findViewById(R.id.storyByName);
@@ -254,8 +260,39 @@ public class StoryFragment extends Fragment implements StoriesProgressView.Stori
         return rootView;
     }
 
-    private void sendStoryReply(String s, StoryModel model) {
+    private void sendStoryReply(String msg, StoryModel model) {
 //        CommonUtils.showToast(s);
+        message.setText("");
+        KeyboardUtils.forceCloseKeyboard(storyyy);
+        UserClient getResponse = AppConfig.getRetrofit().create(UserClient.class);
+
+        JsonObject map = new JsonObject();
+        map.addProperty("api_username", AppConfig.API_USERNAME);
+        map.addProperty("api_password", AppConfig.API_PASSOWRD);
+        map.addProperty("messageText", msg);
+        map.addProperty("messageType", Constants.MESSAGE_TYPE_STORY);
+        map.addProperty("imageUrl", model.getUrl());
+        map.addProperty("messageByName", SharedPrefs.getUserModel().getName());
+        map.addProperty("messageById", SharedPrefs.getUserModel().getId());
+        map.addProperty("hisUserId", model.getUserId());
+        map.addProperty("storyId", model.getId());
+        map.addProperty("userIds", SharedPrefs.getUserModel().getId() + "," + model.getUserId());
+
+        map.addProperty("time", model.getTime());
+        Call<ApiResponse> call = getResponse.sendStoryMessage(map);
+        call.enqueue(new Callback<ApiResponse>() {
+            @Override
+            public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
+                CommonUtils.showToast("Reply sent");
+
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse> call, Throwable t) {
+                CommonUtils.showToast(t.getMessage());
+
+            }
+        });
 
 
     }

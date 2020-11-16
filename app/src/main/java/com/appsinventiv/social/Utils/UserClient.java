@@ -10,6 +10,7 @@ import com.appsinventiv.social.NetworkResponses.AllPostsResponse;
 import com.appsinventiv.social.NetworkResponses.AllRoomMessagesResponse;
 import com.appsinventiv.social.NetworkResponses.AllStoriesResponse;
 import com.appsinventiv.social.NetworkResponses.AllUsersResponse;
+import com.appsinventiv.social.NetworkResponses.ApiResponse;
 import com.appsinventiv.social.NetworkResponses.CreateRoomResponse;
 import com.appsinventiv.social.NetworkResponses.HisFriendsListResponse;
 import com.appsinventiv.social.NetworkResponses.LoginResponse;
@@ -194,13 +195,11 @@ public interface UserClient {
 
     );
 
+
+    @Headers("Content-Type: application/json")
     @POST("api/user/login")
-    @FormUrlEncoded
-    Call<LoginResponse> loginUser(
-            @Field("api_username") String api_username,
-            @Field("api_password") String api_password,
-            @Field("username") String email,
-            @Field("password") String password
+    Call<ApiResponse> loginUser(
+            @Body JsonObject jsonObject
 
     );
 
@@ -254,6 +253,13 @@ public interface UserClient {
     @Headers("Content-Type: application/json")
     @POST("api/message/createMessage")
     Call<NewMessageResponse> createMessage(
+            @Body JsonObject jsonObject
+
+    );
+
+    @Headers("Content-Type: application/json")
+    @POST("api/message/sendStoryMessage")
+    Call<ApiResponse> sendStoryMessage(
             @Body JsonObject jsonObject
 
     );

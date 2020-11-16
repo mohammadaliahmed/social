@@ -56,7 +56,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.UserManagement.LoginActivity" />
+        <activity android:name=".Activities.UserManagement.LoginActivity"
+            android:theme="@style/AppThemeDark.NoActionBar"/>
         <activity
             android:name=".Activities.Camera.CameraActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar" />

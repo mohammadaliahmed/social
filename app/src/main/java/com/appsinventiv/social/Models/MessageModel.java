@@ -37,6 +37,18 @@ public class MessageModel {
     @SerializedName("imageUrl")
     @Expose
     private String imageUrl;
+    @SerializedName("story_id")
+    @Expose
+    private String storyId;
+
+
+    public String getStoryId() {
+        return storyId;
+    }
+
+    public void setStoryId(String storyId) {
+        this.storyId = storyId;
+    }
 
     public String getAudioUrl() {
         return audioUrl;

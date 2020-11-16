@@ -4,7 +4,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class AppConfig {
-        public static String LPTOP_ID = "http://172.29.27.84/social/";
+        public static String LPTOP_ID = "http://192.168.100.31/socialserver/";
 //        public static String LPTOP_ID = "http://192.168.8.100/social/";
     public static String SERVER_URL = "https://saffronclub.com.au/";
     public static String BASE_URL = LPTOP_ID;

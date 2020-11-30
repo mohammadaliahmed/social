@@ -37,6 +37,7 @@ import java.util.List;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -87,7 +88,7 @@ public class CommentsActivity extends AppCompatActivity implements NotificationO
                 if (comment.getText().length() == 0) {
                     comment.setError("Empty");
                 } else {
-                    postComment();
+                    postComment(comment.getText().toString());
                 }
             }
         });
@@ -132,13 +133,14 @@ public class CommentsActivity extends AppCompatActivity implements NotificationO
         });
     }
 
-    private void postComment() {
+    private void postComment(String comment) {
+        this.comment.setText("");
         JsonObject map = new JsonObject();
         map.addProperty("api_username", AppConfig.API_USERNAME);
         map.addProperty("api_password", AppConfig.API_PASSOWRD);
         map.addProperty("id", SharedPrefs.getUserModel().getId());
         map.addProperty("post_id", postId);
-        map.addProperty("text", comment.getText().toString());
+        map.addProperty("text", comment);
         map.addProperty("time", System.currentTimeMillis());
         UserClient getResponse = AppConfig.getRetrofit().create(UserClient.class);
         Call<AddCommentResponse> call = getResponse.addComment(map);
@@ -152,12 +154,9 @@ public class CommentsActivity extends AppCompatActivity implements NotificationO
                         commentsList.add(object);
                         adapter.setItemList(commentsList);
                         recyclerview.scrollToPosition(commentsList.size() - 1);
-                        if (postByUser.getId() != SharedPrefs.getUserModel().getId()) {
-                            sendNotification();
-                        } else {
-                            comment.setText("");
 
-                        }
+                        sendNotification(comment);
+
                     }
 
                 } else {
@@ -174,11 +173,20 @@ public class CommentsActivity extends AppCompatActivity implements NotificationO
         });
     }
 
-    private void sendNotification() {
-        NotificationAsync notificationAsync = new NotificationAsync(CommentsActivity.this);
+    private void sendNotification(String comment) {
+        NotificationAsync notificationAsync = new NotificationAsync(CommentsActivity.this, new NotificationObserver() {
+            @Override
+            public void onSuccess(String chatId) {
+
+            }
+
+            @Override
+            public void onFailure() {
+
+            }
+        });
         String NotificationTitle = "New Comment by " + SharedPrefs.getUserModel().getName();
-        String NotificationMessage = "Comment: " + comment.getText().toString();
-        comment.setText("");
+        String NotificationMessage = "Comment: " + comment;
         notificationAsync.execute(
                 "ali",
                 postByUser.getFcmKey(),

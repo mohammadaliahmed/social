@@ -4,10 +4,35 @@
     android:layout_height="match_parent"
     android:background="#fff"
     android:orientation="vertical">
+
     <ImageView
-        android:layout_width="wrap_content"
-        android:src="@mipmap/ic_launcher"
+        android:id="@+id/img"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
         android:layout_centerInParent="true"
-        android:layout_height="wrap_content"/>
+        android:src="@drawable/logo" />
+
+    <TextView
+        android:id="@+id/font"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/img"
+        android:layout_centerHorizontal="true"
+        android:fontFamily="cursive"
+        android:padding="10dp"
+        android:text=" Social "
+        android:textColor="#000"
+        android:textSize="55sp"
+        android:textStyle="bold" />
+
+    <TextView
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/font"
+        android:layout_centerHorizontal="true"
+        android:padding="10dp"
+        android:text=" Picture sharing app "
+        android:textColor="#000" />
 
 </RelativeLayout>

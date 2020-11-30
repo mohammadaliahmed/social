@@ -18,7 +18,7 @@ import com.appsinventiv.social.Utils.SharedPrefs;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class Splash extends AppCompatActivity {
-    private static int SPLASH_TIME_OUT = 500;
+    private static int SPLASH_TIME_OUT = 1500;
 
 
     @Override

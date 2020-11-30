@@ -1,8 +1,13 @@
 package com.appsinventiv.social;
 
+import com.appsinventiv.social.Activities.Comments.CommentsActivity;
 import com.appsinventiv.social.Models.PostModel;
 import com.appsinventiv.social.Utils.AppConfig;
+import com.appsinventiv.social.Utils.ApplicationClass;
 import com.appsinventiv.social.Utils.CommonUtils;
+import com.appsinventiv.social.Utils.Constants;
+import com.appsinventiv.social.Utils.NotificationAsync;
+import com.appsinventiv.social.Utils.NotificationObserver;
 import com.appsinventiv.social.Utils.SharedPrefs;
 import com.appsinventiv.social.Utils.UserClient;
 import com.google.gson.JsonObject;
@@ -25,7 +30,7 @@ public class CommonFunctions {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.code() == 200) {
-
+                    sendNotification(model.getUserModel().getFcmKey(), "New Like", SharedPrefs.getUserModel().getName() + " liked your post", model.getId());
                 } else {
                     CommonUtils.showToast(response.message());
                 }
@@ -37,5 +42,28 @@ public class CommonFunctions {
 
             }
         });
+    }
+
+    public static void sendNotification(String to, String title, String message, Integer id) {
+        NotificationAsync notificationAsync = new NotificationAsync(ApplicationClass.getInstance().getApplicationContext(), new NotificationObserver() {
+            @Override
+            public void onSuccess(String chatId) {
+
+            }
+
+            @Override
+            public void onFailure() {
+
+            }
+        });
+
+        notificationAsync.execute(
+                "ali",
+                to,
+                title,
+                message,
+                Constants.NOTIFICATION_LIKE,
+                "" + id
+        );
     }
 }

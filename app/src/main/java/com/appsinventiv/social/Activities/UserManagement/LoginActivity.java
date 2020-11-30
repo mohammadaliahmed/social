@@ -42,7 +42,7 @@ import retrofit2.Response;
 public class LoginActivity extends AppCompatActivity {
     GoogleApiClient apiClient;
     GoogleSignInAccount account;
-    LinearLayout google;
+    RelativeLayout google;
     ProgressBar wholeLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

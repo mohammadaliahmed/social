@@ -3,10 +3,12 @@ package com.appsinventiv.social.Activities.Chat;
 import android.content.Context;
 
 import android.content.Intent;
+import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
@@ -83,11 +85,20 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
         final MessageModel model = itemList.get(i);
         if (model.getMessageType().equals(Constants.MESSAGE_TYPE_IMAGE)) {
             viewHolder.image.setVisibility(View.VISIBLE);
+            viewHolder.storyContent.setVisibility(View.GONE);
+
             viewHolder.messageText.setVisibility(View.GONE);
             Glide.with(context).load(AppConfig.BASE_URL_Image + model.getImageUrl()).into(viewHolder.image);
+        } else if (model.getMessageType().equals(Constants.MESSAGE_TYPE_STORY)) {
+            viewHolder.storyContent.setVisibility(View.VISIBLE);
+            viewHolder.image.setVisibility(View.GONE);
+            viewHolder.messageText.setVisibility(View.GONE);
+            viewHolder.storyText.setText(model.getMessageText());
+            Glide.with(context).load(AppConfig.BASE_URL_Image + model.getImageUrl()).into(viewHolder.storyImage);
         } else if (model.getMessageType().equals(Constants.MESSAGE_TYPE_TEXT)) {
             viewHolder.image.setVisibility(View.GONE);
             viewHolder.messageText.setVisibility(View.VISIBLE);
+            viewHolder.storyContent.setVisibility(View.GONE);
             viewHolder.messageText.setText(model.getMessageText());
         }
 
@@ -102,6 +113,13 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
             }
         });
 
+        viewHolder.storyImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
 
     }
 
@@ -113,12 +131,18 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView messageText, time;
         ImageView image;
+        RelativeLayout storyContent;
+        ImageView storyImage;
+        TextView storyText;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             messageText = itemView.findViewById(R.id.messageText);
             image = itemView.findViewById(R.id.image);
             time = itemView.findViewById(R.id.time);
+            storyImage = itemView.findViewById(R.id.storyImage);
+            storyContent = itemView.findViewById(R.id.storyContent);
+            storyText = itemView.findViewById(R.id.storyText);
         }
     }
 

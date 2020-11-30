@@ -23,6 +23,7 @@ import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.appsinventiv.social.Activities.MainActivity;
+import com.appsinventiv.social.Activities.OtherUser.ViewProfile;
 import com.appsinventiv.social.Models.StoryModel;
 import com.appsinventiv.social.NetworkResponses.ApiResponse;
 import com.appsinventiv.social.NetworkResponses.NewMessageResponse;
@@ -88,6 +89,7 @@ public class StoryFragment extends Fragment implements StoriesProgressView.Stori
     EditText message;
 
     ImageView send;
+    RelativeLayout viewStoryBy;
 
 
     private View.OnTouchListener onTouchListener = new View.OnTouchListener() {
@@ -159,6 +161,7 @@ public class StoryFragment extends Fragment implements StoriesProgressView.Stori
 
         View rootView = inflater.inflate(R.layout.activity_story, null);
         storyyy = rootView.findViewById(R.id.storyyy);
+        viewStoryBy = rootView.findViewById(R.id.viewStoryBy);
         userPic = rootView.findViewById(R.id.userPic);
         storyByPic = rootView.findViewById(R.id.storyByPic);
         storyByName = rootView.findViewById(R.id.storyByName);
@@ -166,25 +169,17 @@ public class StoryFragment extends Fragment implements StoriesProgressView.Stori
         message = rootView.findViewById(R.id.message);
         send = rootView.findViewById(R.id.send);
 
-        storyByName.setOnClickListener(new View.OnClickListener() {
+        viewStoryBy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 //                Constants.USER_ID = MainActivity.arrayLists.get(position).get(0).getStoryByUsername();
-                Intent i = new Intent(context, MainActivity.class);
-                i.putExtra("value", 2);
+                Intent i = new Intent(context, ViewProfile.class);
+                i.putExtra("userId", mStoriesList.get(position).getUserId());
                 context.startActivity(i);
             }
         });
 
-        storyByPic.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                Constants.USER_ID = MainActivity.arrayLists.get(position).get(0).getStoryByUsername();
-                Intent i = new Intent(context, MainActivity.class);
-                i.putExtra("value", 2);
-                context.startActivity(i);
-            }
-        });
+
 
         KeyboardUtils.addKeyboardToggleListener(getActivity(), new KeyboardUtils.SoftKeyboardToggleListener() {
             @Override

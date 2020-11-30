@@ -17,6 +17,8 @@ import android.util.Log;
 import com.appsinventiv.social.Activities.Chat.ChattingScreen;
 import com.appsinventiv.social.Activities.Comments.CommentsActivity;
 import com.appsinventiv.social.Activities.MainActivity;
+import com.appsinventiv.social.Activities.OtherUser.ViewProfile;
+import com.appsinventiv.social.Activities.ViewPost;
 import com.appsinventiv.social.R;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -84,18 +86,29 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         Intent resultIntent = null;
         resultIntent = new Intent(this, MainActivity.class);
 
-        if (type.equalsIgnoreCase(Constants.NOTIFICATION_COMMENT)) {
-
-            resultIntent = new Intent(this, CommentsActivity.class);
-            resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            resultIntent.putExtra("postId", Integer.parseInt(Id));
-
-        } else if (type.equalsIgnoreCase(Constants.NOTIFICATION_CHAT)) {
+        if (type.equalsIgnoreCase(Constants.NOTIFICATION_CHAT)) {
 
             resultIntent = new Intent(this, ChattingScreen.class);
-            resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             resultIntent.putExtra("roomId", Integer.parseInt(Id));
             sendMessage();
+
+        } else if (type.equalsIgnoreCase(Constants.NOTIFICATION_COMMENT)) {
+
+            resultIntent = new Intent(this, ViewPost.class);
+            resultIntent.putExtra("postId", Integer.parseInt(Id));
+
+
+        } else if (type.equalsIgnoreCase(Constants.NOTIFICATION_LIKE)) {
+
+            resultIntent = new Intent(this, ViewPost.class);
+            resultIntent.putExtra("postId", Integer.parseInt(Id));
+
+
+        } else if (type.equalsIgnoreCase(Constants.NOTIFICATION_REQUEST)) {
+
+            resultIntent = new Intent(this, ViewProfile.class);
+            resultIntent.putExtra("userId", Integer.parseInt(Id));
 
         }
         PendingIntent resultPendingIntent = PendingIntent.getActivity(this,

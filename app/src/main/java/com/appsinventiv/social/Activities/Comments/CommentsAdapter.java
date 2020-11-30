@@ -22,6 +22,7 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHolder> {
@@ -50,8 +51,11 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         final CommentsModel model = itemList.get(position);
 
+        try {
+            Glide.with(context).load(AppConfig.BASE_URL_Image + model.getUser().getThumbnailUrl()).into(holder.image);
+        } catch (Exception e) {
 
-        Glide.with(context).load(AppConfig.BASE_URL_Image + model.getUser().getThumbnailUrl()).into(holder.image);
+        }
         holder.name.setText(model.getUser().getName());
 
 
@@ -60,7 +64,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
         holder.image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(model.getUser().getId()!= SharedPrefs.getUserModel().getId()) {
+                if (model.getUser().getId() != SharedPrefs.getUserModel().getId()) {
 
                     Intent i = new Intent(context, ViewProfile.class);
                     i.putExtra("userId", model.getUserId());

@@ -209,6 +209,7 @@ public class TextStatusActivity extends AppCompatActivity {
         map.addProperty("id", SharedPrefs.getUserModel().getId());
         map.addProperty("images_url", liveUrls);
         map.addProperty("post_type", "image");
+        map.addProperty("time", System.currentTimeMillis());
         UserClient getResponse = AppConfig.getRetrofit().create(UserClient.class);
         Call<AddPostResponse> call = getResponse.addPost(map);
         call.enqueue(new Callback<AddPostResponse>() {

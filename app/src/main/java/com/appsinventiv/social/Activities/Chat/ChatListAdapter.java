@@ -59,6 +59,8 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHo
         });
 
 
+
+
     }
 
     @Override

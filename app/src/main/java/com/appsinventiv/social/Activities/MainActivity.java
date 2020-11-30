@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -67,6 +68,8 @@ import java.io.FileOutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
@@ -90,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
         updateFcmKey();
         fragment = new HomeFragment(MainActivity.this);
         loadFragment(fragment);
-        getStoriesFromServer();
+//        getStoriesFromServer();
     }
 
     private void downloadFile(final String url) {
@@ -394,16 +397,26 @@ public class MainActivity extends AppCompatActivity {
 //            mSelected = Matisse.obtainResult(data);
             ArrayList<String> mSelected = data.getStringArrayListExtra(Pix.IMAGE_RESULTS);
             ArrayList<StoriesPickedModel> list = new ArrayList<>();
-
+            int count = 0;
             for (String path : mSelected) {
                 Uri uri = Uri.parse(path);
                 StoriesPickedModel model = new StoriesPickedModel(
-                        "" + uri, "" + uri, "", "image", System.currentTimeMillis()
+                        "" + uri, "" + uri, "", "image", count
                 );
                 list.add(model);
+                count++;
 
             }
             if (list.size() > 0) {
+                Collections.sort(list, new Comparator<StoriesPickedModel>() {
+                    @Override
+                    public int compare(StoriesPickedModel listData, StoriesPickedModel t1) {
+                        Long ob1 = listData.getTime();
+                        Long ob2 = t1.getTime();
+                        return ob1.compareTo(ob2);
+
+                    }
+                });
                 SharedPrefs.setPickedList(list);
                 startActivity(new Intent(this, PhotoRedirectActivity.class));
 
@@ -464,39 +477,42 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateFcmKey() {
-        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
-            @Override
-            public void onSuccess(InstanceIdResult instanceIdResult) {
-                String deviceToken = instanceIdResult.getToken();
-                UserClient getResponse = AppConfig.getRetrofit().create(UserClient.class);
-                Call<UpdateFcmKeyResponse> call = getResponse.updateFcmKey(
-                        AppConfig.API_USERNAME, AppConfig.API_PASSOWRD,
-                        "" + SharedPrefs.getUserModel().getId(),
-                        deviceToken
-                );
-                call.enqueue(new Callback<UpdateFcmKeyResponse>() {
-                    @Override
-                    public void onResponse(Call<UpdateFcmKeyResponse> call, Response<UpdateFcmKeyResponse> response) {
-                        if (response.code() == 200) {
-                            UserModel user = response.body().getUserModel();
-                            if (user != null) {
-                                SharedPrefs.setUserModel(user);
+        if (SharedPrefs.getUserModel() != null) {
+            FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
+                @Override
+                public void onSuccess(InstanceIdResult instanceIdResult) {
+                    String deviceToken = instanceIdResult.getToken();
+                    UserClient getResponse = AppConfig.getRetrofit().create(UserClient.class);
+                    Call<UpdateFcmKeyResponse> call = getResponse.updateFcmKey(
+                            AppConfig.API_USERNAME, AppConfig.API_PASSOWRD,
+                            "" + SharedPrefs.getUserModel().getId(),
+                            deviceToken
+                    );
+                    call.enqueue(new Callback<UpdateFcmKeyResponse>() {
+                        @Override
+                        public void onResponse(Call<UpdateFcmKeyResponse> call, Response<UpdateFcmKeyResponse> response) {
+                            if (response.code() == 200) {
+                                UserModel user = response.body().getUserModel();
+                                if (user != null) {
+                                    SharedPrefs.setUserModel(user);
+                                }
+                            } else {
+                                CommonUtils.showToast(response.message());
                             }
-                        } else {
-                            CommonUtils.showToast(response.message());
                         }
-                    }
 
-                    @Override
-                    public void onFailure(Call<UpdateFcmKeyResponse> call, Throwable t) {
-                        CommonUtils.showToast(t.getMessage());
-                    }
-                });
-                // Do whatever you want with your token now
-                // i.e. store it on SharedPreferences or DB
-                // or directly send it to server
-            }
-        });
+                        @Override
+                        public void onFailure(Call<UpdateFcmKeyResponse> call, Throwable t) {
+                            CommonUtils.showToast(t.getMessage());
+                        }
+                    });
+                    // Do whatever you want with your token now
+                    // i.e. store it on SharedPreferences or DB
+                    // or directly send it to server
+                }
+
+            });
+        }
 
     }
 

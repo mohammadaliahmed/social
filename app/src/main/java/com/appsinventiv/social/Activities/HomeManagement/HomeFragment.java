@@ -24,7 +24,9 @@ import com.appsinventiv.social.CommonFunctions;
 import com.appsinventiv.social.Models.PostModel;
 import com.appsinventiv.social.Models.StoriesPickedModel;
 import com.appsinventiv.social.Models.StoryModel;
+import com.appsinventiv.social.Models.StoryViewsModel;
 import com.appsinventiv.social.NetworkResponses.AllPostsResponse;
+import com.appsinventiv.social.NetworkResponses.AllStoriesResponse;
 import com.appsinventiv.social.R;
 import com.appsinventiv.social.Utils.AppConfig;
 import com.appsinventiv.social.Utils.ApplicationClass;
@@ -42,6 +44,8 @@ import com.google.gson.JsonObject;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -51,6 +55,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -93,21 +98,6 @@ public class HomeFragment extends Fragment {
         friendsStories = rootView.findViewById(R.id.friendsStories);
 
         friendsStories.setLayoutManager(new LinearLayoutManager(context, RecyclerView.HORIZONTAL, false));
-        ArrayList<ArrayList<StoryModel>> list = SharedPrefs.getHomeStories();
-        if (list == null) {
-            list = new ArrayList<>();
-        }
-        storiesAdapter = new HomeStoriesAdapter(context, list, new HomeStoriesAdapter.HomeStoriesAdapterCallbacks() {
-            @Override
-            public void onStoryClicked(StoryModel model, int position) {
-                Constants.STORY_POSITION = position;
-                Intent i = new Intent(context, StoryActivity.class);
-                context.startActivity(i);
-
-            }
-        });
-        friendsStories.setAdapter(storiesAdapter);
-        storiesAdapter.notifyDataSetChanged();
 
 
         plusImg.setOnClickListener(new View.OnClickListener() {
@@ -116,11 +106,7 @@ public class HomeFragment extends Fragment {
                 openGallery();
             }
         });
-        if (MainActivity.myArrayLists.size() > 0) {
-            circleImg.setVisibility(View.VISIBLE);
-        } else {
-            circleImg.setVisibility(View.GONE);
-        }
+
         Glide.with(context).load(AppConfig.BASE_URL_Image + SharedPrefs.getUserModel().getThumbnailUrl()).into(userPic);
         userPic.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -207,17 +193,40 @@ public class HomeFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(context, RecyclerView.VERTICAL, false);
         recycler.setLayoutManager(layoutManager);
 //        adapter.setLikeList(SharedPrefs.getLikesList());
-        if (Constants.IS_HOME_LOADED) {
-            postList = SharedPrefs.getHomeList();
-            if (postList != null) {
-                adapter.setDataArrayList(postList);
-            }
-        } else {
-            getDataFromServer();
-
+        postList = SharedPrefs.getHomeList();
+        if (postList != null) {
+            adapter.setDataArrayList(postList);
+            setStoriesList();
         }
+
+        getDataFromServer();
+
+
         return rootView;
 
+    }
+
+    private void setStoriesList() {
+        ArrayList<ArrayList<StoryModel>> list = SharedPrefs.getHomeStories();
+        if (list == null) {
+            list = new ArrayList<>();
+        }
+
+        storiesAdapter = new HomeStoriesAdapter(context, list, new HomeStoriesAdapter.HomeStoriesAdapterCallbacks() {
+            @Override
+            public void onStoryClicked(StoryModel model, int position) {
+                Constants.STORY_POSITION = position;
+                Intent i = new Intent(context, StoryActivity.class);
+                context.startActivity(i);
+
+            }
+        });
+        friendsStories.setAdapter(storiesAdapter);
+        if (MainActivity.myArrayLists.size() > 0) {
+            circleImg.setVisibility(View.VISIBLE);
+        } else {
+            circleImg.setVisibility(View.GONE);
+        }
     }
 
 
@@ -307,6 +316,7 @@ public class HomeFragment extends Fragment {
                         Constants.IS_HOME_LOADED = true;
                         SharedPrefs.setHomeList(postList);
                         adapter.setDataArrayList(postList);
+                        getStoriesFromServer();
                     }
                 }
             }
@@ -320,6 +330,80 @@ public class HomeFragment extends Fragment {
 
     }
 
+    private void getStoriesFromServer() {
+        JsonObject map = new JsonObject();
+        map.addProperty("api_username", AppConfig.API_USERNAME);
+        map.addProperty("api_password", AppConfig.API_PASSOWRD);
+        map.addProperty("id", SharedPrefs.getUserModel().getId());
+        map.addProperty("friends", SharedPrefs.getUserModel().getCommaFriends());
+        UserClient getResponse = AppConfig.getRetrofit().create(UserClient.class);
+        Call<AllStoriesResponse> call = getResponse.allStories(map);
+        call.enqueue(new Callback<AllStoriesResponse>() {
+            @Override
+            public void onResponse(Call<AllStoriesResponse> call, Response<AllStoriesResponse> response) {
+                if (response.code() == 200) {
+                    List<StoryModel> data = response.body().getPosts();
+                    if (data != null && data.size() > 0) {
+                        MainActivity.myArrayLists.clear();
+                        MainActivity.storiesHasMap.clear();
+                        MainActivity.storyViewsHashMap.clear();
+                        for (StoryModel model : data) {
+                            if (model.getUserId().equals(SharedPrefs.getUserModel().getId())) {
+                                MainActivity.myArrayLists.add(model);
+                            } else {
+                                if (MainActivity.storiesHasMap.containsKey(model.getUserId())) {
+                                    ArrayList<StoryModel> list = MainActivity.storiesHasMap.get(model.getUserId());
+                                    list.add(model);
+                                    MainActivity.storiesHasMap.put(model.getUserId(), list);
+                                } else {
+                                    ArrayList<StoryModel> list = new ArrayList<>();
+                                    list.add(model);
+                                    MainActivity.storiesHasMap.put(model.getUserId(), list);
+                                }
+                            }
+                        }
+                        if (MainActivity.storiesHasMap.size() > 0) {
+                            MainActivity.arrayLists.clear();
+                            MainActivity.arrayLists.addAll(MainActivity.storiesHasMap.values());
+                            SharedPrefs.setHomeStories(MainActivity.arrayLists);
+                        } else {
+                            MainActivity.arrayLists = new ArrayList<>();
+
+                            SharedPrefs.setHomeStories(MainActivity.arrayLists);
+
+                        }
+                    } else {
+                        MainActivity.arrayLists = new ArrayList<>();
+
+                        SharedPrefs.setHomeStories(MainActivity.arrayLists);
+                    }
+                    List<StoryViewsModel> storyViewsList = response.body().getStoryViews();
+                    if (storyViewsList != null && storyViewsList.size() > 0) {
+                        for (StoryViewsModel storyView : storyViewsList) {
+                            if (MainActivity.storyViewsHashMap.containsKey(storyView.getStoryId())) {
+                                ArrayList<StoryViewsModel> list = MainActivity.storyViewsHashMap.get(storyView.getStoryId());
+                                list.add(storyView);
+                                MainActivity.storyViewsHashMap.put(storyView.getStoryId(), list);
+                            } else {
+                                ArrayList<StoryViewsModel> list = new ArrayList<>();
+                                list.add(storyView);
+                                MainActivity.storyViewsHashMap.put(storyView.getStoryId(), list);
+                            }
+                        }
+                    }
+                    setStoriesList();
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<AllStoriesResponse> call, Throwable t) {
+                CommonUtils.showToast(t.getMessage());
+
+            }
+        });
+    }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -328,16 +412,27 @@ public class HomeFragment extends Fragment {
         if (requestCode == 25 && resultCode == Activity.RESULT_OK) {
             mSelected = data.getStringArrayListExtra(Pix.IMAGE_RESULTS);
             ArrayList<StoriesPickedModel> list = new ArrayList<>();
-
+            int count=0;
             for (String path : mSelected) {
                 Uri uri = Uri.parse(path);
                 StoriesPickedModel model = new StoriesPickedModel(
-                        "" + uri, "" + uri, "", "image", System.currentTimeMillis()
+                        "" + uri, "" + uri, "", "image", count
                 );
                 list.add(model);
+                count++;
 
             }
             if (list.size() > 0) {
+                Collections.sort(list, new Comparator<StoriesPickedModel>() {
+                    @Override
+                    public int compare(StoriesPickedModel listData, StoriesPickedModel t1) {
+                        Long ob1 = listData.getTime();
+                        Long ob2 = t1.getTime();
+                        return ob1.compareTo(ob2);
+
+                    }
+                });
+
                 SharedPrefs.setPickedList(list);
                 startActivity(new Intent(getContext(), StoryRedirectActivity.class));
 

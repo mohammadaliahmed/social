@@ -63,7 +63,7 @@ public class ChattingScreen extends AppCompatActivity {
     Integer roomId;
     String name;
     EditText message;
-    FloatingActionButton send;
+    ImageView send;
     RecyclerView recycler;
     MessagesAdapter adapter;
     private List<MessageModel> itemList = new ArrayList<>();
@@ -148,6 +148,7 @@ public class ChattingScreen extends AppCompatActivity {
             }
         });
         getRoomMessagesFromDB();
+        getOtherUserFromRoomId(roomId);
 
 
     }
@@ -266,16 +267,16 @@ public class ChattingScreen extends AppCompatActivity {
                         adapter.setItemList(itemList);
                         recycler.scrollToPosition(itemList.size() - 1);
 
-                        for (MessageModel messageModel : itemList) {
-                            if (messageModel.getMessageById() != SharedPrefs.getUserModel().getId()) {
-                                hisUserId = messageModel.getMessageById();
-                                if (!callededUserApi) {
-                                    callUserApi(hisUserId);
-                                }
-                                return;
-                            }
-
-                        }
+//                        for (MessageModel messageModel : itemList) {
+//                            if (messageModel.getMessageById() != SharedPrefs.getUserModel().getId()) {
+//                                hisUserId = messageModel.getMessageById();
+//                                if (!callededUserApi) {
+//                                    callUserApi(hisUserId);
+//                                }
+//                                return;
+//                            }
+//
+//                        }
 
                     }
                 }
@@ -288,13 +289,14 @@ public class ChattingScreen extends AppCompatActivity {
         });
     }
 
-    private void callUserApi(int hisId) {
+    private void getOtherUserFromRoomId(int roomId) {
         JsonObject map = new JsonObject();
         map.addProperty("api_username", AppConfig.API_USERNAME);
         map.addProperty("api_password", AppConfig.API_PASSOWRD);
-        map.addProperty("id", hisId);
+        map.addProperty("id", roomId);
+        map.addProperty("myId", SharedPrefs.getUserModel().getId());
         UserClient getResponse = AppConfig.getRetrofit().create(UserClient.class);
-        Call<UserProfileResponse> call = getResponse.userProfile(map);
+        Call<UserProfileResponse> call = getResponse.getOtherUserFromRoomId(map);
         call.enqueue(new Callback<UserProfileResponse>() {
             @Override
             public void onResponse(Call<UserProfileResponse> call, Response<UserProfileResponse> response) {
@@ -302,6 +304,7 @@ public class ChattingScreen extends AppCompatActivity {
                     if (response.body() != null) {
                         callededUserApi = true;
                         hisUserModel = response.body().getUserModel();
+                        hisUserId=hisUserModel.getId();
                         chatterName.setText(hisUserModel.getName());
                         try {
                             Glide.with(ChattingScreen.this).load(AppConfig.BASE_URL_Image + hisUserModel.getThumbnailUrl()).into(image);

@@ -35,7 +35,9 @@ public class Constants {
     public static int STORY_POSITION = 0;
 
     public static String NOTIFICATION_COMMENT = "comment";
+    public static String NOTIFICATION_LIKE = "like";
     public static String NOTIFICATION_CHAT = "chat";
+    public static String NOTIFICATION_REQUEST = "request";
     public static boolean IS_HOME_LOADED = false;
 
 

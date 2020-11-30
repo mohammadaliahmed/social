@@ -108,18 +108,19 @@ public class ViewProfile extends AppCompatActivity {
                 startActivity(i);
             }
         });
+        if(SharedPrefs.getUserModel().getFriendsList()!=null) {
+            if (SharedPrefs.getUserModel().getFriendsList().contains(userId)) {
+                whatToDo = 1;//friend
+                getPostsDataFromServer();
+            } else if (SharedPrefs.getUserModel().getRequestSentList().contains(userId)) {
+                whatToDo = 2;//request sent
+            } else if (SharedPrefs.getUserModel().getRequestsReceivedList().contains(userId)) {
+                whatToDo = 3;//accept request
+            } else {
+                whatToDo = 0;//add as friend
+            }
 
-        if (SharedPrefs.getUserModel().getFriendsList().contains(userId)) {
-            whatToDo = 1;//friend
-            getPostsDataFromServer();
-        } else if (SharedPrefs.getUserModel().getRequestSentList().contains(userId)) {
-            whatToDo = 2;//request sent
-        } else if (SharedPrefs.getUserModel().getRequestsReceivedList().contains(userId)) {
-            whatToDo = 3;//accept request
-        } else {
-            whatToDo = 0;//add as friend
         }
-
         if (whatToDo == 0) {
             button.setBackground(getResources().getDrawable(R.drawable.curved_corners_colored));
             button.setTextColor(getResources().getColor(R.color.white));
@@ -309,6 +310,7 @@ public class ViewProfile extends AppCompatActivity {
                     button.setBackground(getResources().getDrawable(R.drawable.grey_corners));
                     button.setTextColor(getResources().getColor(R.color.black));
                     button.setText("Friend");
+                    getPostsDataFromServer();
                 } else {
                     CommonUtils.showToast(response.message());
                 }

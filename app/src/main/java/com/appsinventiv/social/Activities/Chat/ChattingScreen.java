@@ -339,6 +339,7 @@ public class ChattingScreen extends AppCompatActivity {
         map.addProperty("imageUrl", liveUrl);
         map.addProperty("messageByName", SharedPrefs.getUserModel().getName());
         map.addProperty("messageById", SharedPrefs.getUserModel().getId());
+        map.addProperty("hisUserId",hisUserId);
         map.addProperty("roomId", roomId);
         map.addProperty("time", System.currentTimeMillis());
         Call<NewMessageResponse> call = getResponse.createMessage(map);

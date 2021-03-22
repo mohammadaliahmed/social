@@ -19,6 +19,7 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MyFriendsListAdapter extends RecyclerView.Adapter<MyFriendsListAdapter.ViewHolder> {
@@ -46,12 +47,12 @@ public class MyFriendsListAdapter extends RecyclerView.Adapter<MyFriendsListAdap
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         final UserModel model = itemList.get(position);
-        Glide.with(context).load(AppConfig.BASE_URL_Image + model.getThumbnailUrl()).into(holder.image);
+        Glide.with(context).load(AppConfig.BASE_URL_Image + model.getThumbnailUrl()).placeholder(R.drawable.ic_profile_plc).into(holder.image);
         holder.name.setText(model.getName());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(model.getId()!= SharedPrefs.getUserModel().getId()) {
+                if (model.getId() != SharedPrefs.getUserModel().getId()) {
 
                     Intent i = new Intent(context, ViewProfile.class);
                     i.putExtra("userId", model.getId());

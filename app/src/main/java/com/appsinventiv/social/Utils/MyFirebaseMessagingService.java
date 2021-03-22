@@ -109,6 +109,14 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
             resultIntent = new Intent(this, ViewProfile.class);
             resultIntent.putExtra("userId", Integer.parseInt(Id));
+            resultIntent.putExtra("accept_request", "accept_request");
+            resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        } else if (type.equalsIgnoreCase(Constants.NOTIFICATION_REQUEST_ACDEPTED)) {
+
+            resultIntent = new Intent(this, ViewProfile.class);
+            resultIntent.putExtra("userId", Integer.parseInt(Id));
+            resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
         }
         PendingIntent resultPendingIntent = PendingIntent.getActivity(this,
@@ -127,7 +135,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             int importance = NotificationManager.IMPORTANCE_HIGH;
-            NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "NOTIFICATION_CHANNEL_NAME", importance);
+            NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "SOCIAL", importance);
             notificationChannel.enableLights(true);
             notificationChannel.setLightColor(Color.WHITE);
             notificationChannel.enableVibration(true);

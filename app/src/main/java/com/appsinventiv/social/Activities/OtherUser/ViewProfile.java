@@ -41,6 +41,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -60,6 +61,8 @@ public class ViewProfile extends AppCompatActivity {
     TextView message;
     private UserModel user;
     LinearLayout frndssss;
+    String accept_request;
+    private UserModel my_user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +75,7 @@ public class ViewProfile extends AppCompatActivity {
         }
         this.setTitle("");
         userId = getIntent().getIntExtra("userId", 0);
+
         message = findViewById(R.id.message);
         profilePic = findViewById(R.id.profilePic);
         recyclerview = findViewById(R.id.recyclerview);
@@ -108,37 +112,8 @@ public class ViewProfile extends AppCompatActivity {
                 startActivity(i);
             }
         });
-        if(SharedPrefs.getUserModel().getFriendsList()!=null) {
-            if (SharedPrefs.getUserModel().getFriendsList().contains(userId)) {
-                whatToDo = 1;//friend
-                getPostsDataFromServer();
-            } else if (SharedPrefs.getUserModel().getRequestSentList().contains(userId)) {
-                whatToDo = 2;//request sent
-            } else if (SharedPrefs.getUserModel().getRequestsReceivedList().contains(userId)) {
-                whatToDo = 3;//accept request
-            } else {
-                whatToDo = 0;//add as friend
-            }
 
-        }
-        if (whatToDo == 0) {
-            button.setBackground(getResources().getDrawable(R.drawable.curved_corners_colored));
-            button.setTextColor(getResources().getColor(R.color.white));
-            button.setText("Add As Friend");
 
-        } else if (whatToDo == 1) {
-            button.setBackground(getResources().getDrawable(R.drawable.grey_corners));
-            button.setTextColor(getResources().getColor(R.color.black));
-            button.setText("Friend");
-        } else if (whatToDo == 2) {
-            button.setBackground(getResources().getDrawable(R.drawable.grey_corners));
-            button.setTextColor(getResources().getColor(R.color.black));
-            button.setText("Request Sent");
-        } else if (whatToDo == 3) {
-            button.setBackground(getResources().getDrawable(R.drawable.curved_corners_green));
-            button.setTextColor(getResources().getColor(R.color.white));
-            button.setText("Accept Request");
-        }
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -331,7 +306,8 @@ public class ViewProfile extends AppCompatActivity {
         JsonObject map = new JsonObject();
         map.addProperty("api_username", AppConfig.API_USERNAME);
         map.addProperty("api_password", AppConfig.API_PASSOWRD);
-        map.addProperty("id", userId);
+        map.addProperty("id", SharedPrefs.getUserModel().getId());
+        map.addProperty("his_id", userId);
         UserClient getResponse = AppConfig.getRetrofit().create(UserClient.class);
         Call<UserProfileResponse> call = getResponse.userProfile(map);
         call.enqueue(new Callback<UserProfileResponse>() {
@@ -340,6 +316,8 @@ public class ViewProfile extends AppCompatActivity {
                 if (response.code() == 200) {
                     if (response.body() != null) {
                         user = response.body().getUserModel();
+                        my_user = response.body().getMy_user();
+                        SharedPrefs.setUserModel(my_user);
                         setupUi(user, response.body().getFriendCount());
                     } else {
                         CommonUtils.showToast("Error");
@@ -377,8 +355,9 @@ public class ViewProfile extends AppCompatActivity {
                         adapter.setItemList(itemList);
                         setupCache();
                         SharedPrefs.setPosts(itemList);
-                        postCount.setText(itemList.size() + "");
+
                     }
+                    postCount.setText(itemList.size() + "");
 
 
                 } else {
@@ -404,10 +383,53 @@ public class ViewProfile extends AppCompatActivity {
 
 
     private void setupUi(UserModel userModel, int friendCount) {
-        Glide.with(this).load(AppConfig.BASE_URL_Image + userModel.getThumbnailUrl()).into(profilePic);
+        Glide.with(this).load(AppConfig.BASE_URL_Image + userModel.getThumbnailUrl()).placeholder(R.drawable.ic_profile_plc).into(profilePic);
         name.setText(userModel.getName());
         friendsCount.setText("" + friendCount);
         this.setTitle(userModel.getName());
+
+          if (SharedPrefs.getUserModel().getFriendsList() != null) {
+            if (SharedPrefs.getUserModel().getFriendsList().contains(userId)) {
+                whatToDo = 1;//friend
+                getPostsDataFromServer();
+            } else if (SharedPrefs.getUserModel().getRequestSentList().contains(userId)) {
+                whatToDo = 2;//request sent
+            } else if (SharedPrefs.getUserModel().getRequestsReceivedList().contains(userId)) {
+                whatToDo = 3;//accept request
+            } else {
+                whatToDo = 0;//add as friend
+            }
+
+        }
+        if (getIntent().getStringExtra("accept_request") != null) {
+
+            if (getIntent().getStringExtra("accept_request").equalsIgnoreCase("accept_request")) {
+                whatToDo = 3;
+            }
+        }
+
+
+
+        if (whatToDo == 0) {
+            button.setBackground(getResources().getDrawable(R.drawable.curved_corners_colored));
+            button.setTextColor(getResources().getColor(R.color.white));
+            button.setText("Add As Friend");
+
+        } else if (whatToDo == 1) {
+            button.setBackground(getResources().getDrawable(R.drawable.grey_corners));
+            button.setTextColor(getResources().getColor(R.color.black));
+            button.setText("Friend");
+        } else if (whatToDo == 2) {
+            button.setBackground(getResources().getDrawable(R.drawable.grey_corners));
+            button.setTextColor(getResources().getColor(R.color.black));
+            button.setText("Request Sent");
+        } else if (whatToDo == 3) {
+            button.setBackground(getResources().getDrawable(R.drawable.curved_corners_green));
+            button.setTextColor(getResources().getColor(R.color.white));
+            button.setText("Accept Request");
+        }
+
+
 
     }
 

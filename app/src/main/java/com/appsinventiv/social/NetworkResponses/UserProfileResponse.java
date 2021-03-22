@@ -1,5 +1,6 @@
 package com.appsinventiv.social.NetworkResponses;
 
+import com.appsinventiv.social.Models.NotificationModel;
 import com.appsinventiv.social.Models.PostModel;
 import com.appsinventiv.social.Models.UserModel;
 import com.google.gson.annotations.Expose;
@@ -22,6 +23,18 @@ public class UserProfileResponse {
     @SerializedName("user")
     @Expose
     private UserModel userModel;
+    @SerializedName("my_user")
+    @Expose
+    private UserModel my_user;
+
+
+    public UserModel getMy_user() {
+        return my_user;
+    }
+
+    public void setMy_user(UserModel my_user) {
+        this.my_user = my_user;
+    }
 
     public UserModel getUserModel() {
         return userModel;

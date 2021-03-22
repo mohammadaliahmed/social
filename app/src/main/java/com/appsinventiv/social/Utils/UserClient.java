@@ -118,6 +118,13 @@ public interface UserClient {
     );
 
     @Headers("Content-Type: application/json")
+    @POST("api/notification/getMyNotifications")
+    Call<ApiResponse> getMyNotifications(
+            @Body JsonObject jsonObject
+
+    );
+
+    @Headers("Content-Type: application/json")
     @POST("api/user/userProfile")
     Call<UserProfileResponse> userProfile(
             @Body JsonObject jsonObject

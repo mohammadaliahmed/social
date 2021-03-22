@@ -42,6 +42,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -291,16 +292,17 @@ public class PhotoRedirectActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 52) {
-
-            String imagePath = data.getStringExtra(ImageEditor.EXTRA_EDITED_PATH);
-            StoriesPickedModel abc = itemList.get(posi);
-            abc.setUri(imagePath);
-            itemList.set(posi, abc);
-            adapter.notifyDataSetChanged();
-            sliderAdapter.setPicturesList(itemList);
-            viewPager.setAdapter(sliderAdapter);
-            viewPager.setCurrentItem(posi);
-            sliderAdapter.notifyDataSetChanged();
+            if (data != null && data.getStringExtra(ImageEditor.EXTRA_EDITED_PATH) != null) {
+                String imagePath = data.getStringExtra(ImageEditor.EXTRA_EDITED_PATH);
+                StoriesPickedModel abc = itemList.get(posi);
+                abc.setUri(imagePath);
+                itemList.set(posi, abc);
+                adapter.notifyDataSetChanged();
+                sliderAdapter.setPicturesList(itemList);
+                viewPager.setAdapter(sliderAdapter);
+                viewPager.setCurrentItem(posi);
+                sliderAdapter.notifyDataSetChanged();
+            }
         }
     }
 

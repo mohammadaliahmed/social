@@ -23,6 +23,9 @@
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/profilePic"
                     android:layout_width="80dp"
+
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:clickable="true"
                     android:layout_height="80dp"
                     android:layout_margin="15dp"
                     android:src="@drawable/ic_profile_plc" />
@@ -48,6 +51,9 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:clickable="true"
                     android:layout_gravity="center"
                     android:layout_weight="1"
 
@@ -123,6 +129,9 @@
                 android:id="@+id/button"
                 android:layout_width="120dp"
                 android:layout_height="30dp"
+
+                android:foreground="?android:attr/selectableItemBackground"
+                android:clickable="true"
                 android:layout_gravity="center"
                 android:layout_margin="10dp"
                 android:background="@drawable/curved_corners_colored"
@@ -134,12 +143,15 @@
                 android:id="@+id/message"
                 android:layout_width="120dp"
                 android:layout_height="30dp"
+
+                android:foreground="?android:attr/selectableItemBackground"
+                android:clickable="true"
                 android:layout_gravity="center"
                 android:layout_margin="10dp"
                 android:background="@drawable/grey_corners"
                 android:gravity="center"
                 android:text="Message"
-                android:textColor="@color/gray" />
+                android:textColor="@color/black" />
 
         </LinearLayout>
 

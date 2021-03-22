@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import com.appsinventiv.social.Activities.Camera.PhotoRedirectActivity;
@@ -51,6 +52,7 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -79,6 +81,8 @@ public class HomeFragment extends Fragment {
     private ArrayList<String> mSelected = new ArrayList<>();
     public static List<Integer> likesList = new ArrayList<>();
     ImageView circleImg;
+    CardView noPosts;
+    Button createPost;
 
 
     public HomeFragment(Context context) {
@@ -94,7 +98,9 @@ public class HomeFragment extends Fragment {
         recycler = rootView.findViewById(R.id.my_fancy_videos);
         circleImg = rootView.findViewById(R.id.circleImg);
         userPic = rootView.findViewById(R.id.userPic);
+        createPost = rootView.findViewById(R.id.createPost);
         plusImg = rootView.findViewById(R.id.plusImg);
+        noPosts = rootView.findViewById(R.id.noPosts);
         friendsStories = rootView.findViewById(R.id.friendsStories);
 
         friendsStories.setLayoutManager(new LinearLayoutManager(context, RecyclerView.HORIZONTAL, false));
@@ -107,7 +113,21 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        Glide.with(context).load(AppConfig.BASE_URL_Image + SharedPrefs.getUserModel().getThumbnailUrl()).into(userPic);
+        createPost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Options options = Options.init()
+                        .setRequestCode(23)                                           //Request code for activity results
+                        .setCount(5)                                                   //Number of images to restict selection count
+                        .setExcludeVideos(true)                                       //Option to exclude videos
+                        .setScreenOrientation(Options.SCREEN_ORIENTATION_PORTRAIT)     //Orientaion
+                        ;                                       //Custom Path For media Storage
+
+                Pix.start(getActivity(), options);
+            }
+        });
+
+        Glide.with(context).load(AppConfig.BASE_URL_Image + SharedPrefs.getUserModel().getThumbnailUrl()).placeholder(R.drawable.ic_profile_plc).into(userPic);
         userPic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -312,12 +332,19 @@ public class HomeFragment extends Fragment {
                     List<PostModel> data = response.body().getPosts();
                     likesList = response.body().getLikesList() == null ? new ArrayList<>() : response.body().getLikesList();
                     if (data != null && data.size() > 0) {
+                        noPosts.setVisibility(View.GONE);
                         postList = data;
+
                         Constants.IS_HOME_LOADED = true;
                         SharedPrefs.setHomeList(postList);
                         adapter.setDataArrayList(postList);
-                        getStoriesFromServer();
+
+                    } else {
+                        SharedPrefs.setHomeList(new ArrayList<>());
+                        noPosts.setVisibility(View.VISIBLE);
+                        recycler.setVisibility(View.GONE);
                     }
+                    getStoriesFromServer();
                 }
             }
 
@@ -412,7 +439,7 @@ public class HomeFragment extends Fragment {
         if (requestCode == 25 && resultCode == Activity.RESULT_OK) {
             mSelected = data.getStringArrayListExtra(Pix.IMAGE_RESULTS);
             ArrayList<StoriesPickedModel> list = new ArrayList<>();
-            int count=0;
+            int count = 0;
             for (String path : mSelected) {
                 Uri uri = Uri.parse(path);
                 StoriesPickedModel model = new StoriesPickedModel(

@@ -106,5 +106,41 @@
 
     </LinearLayout>
 
+    <androidx.cardview.widget.CardView
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:id="@+id/noPosts"
+        android:visibility="gone"
+        app:cardCornerRadius="5dp"
+        app:cardElevation="5dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="5dp"
+                android:gravity="center"
+                android:text="No posts found\n\nCreate your first post"
+                android:textColor="#000" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:id="@+id/createPost"
+                android:layout_gravity="center"
+                android:layout_margin="10dp"
+                android:background="@drawable/btn_bg"
+                android:inputType="text"
+                android:text="Create"
+                android:textColor="#fff" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
 
 </RelativeLayout>

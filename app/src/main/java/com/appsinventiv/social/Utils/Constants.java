@@ -38,6 +38,7 @@ public class Constants {
     public static String NOTIFICATION_LIKE = "like";
     public static String NOTIFICATION_CHAT = "chat";
     public static String NOTIFICATION_REQUEST = "request";
+    public static String NOTIFICATION_REQUEST_ACDEPTED = "request_accepted";
     public static boolean IS_HOME_LOADED = false;
 
 

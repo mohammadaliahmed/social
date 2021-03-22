@@ -17,6 +17,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.appsinventiv.social.Activities.AccountSettings;
+import com.appsinventiv.social.Activities.ListOfNotifications;
 import com.appsinventiv.social.Adapters.MyProfilePostsAdapter;
 import com.appsinventiv.social.Activities.MyListOfFriends;
 import com.appsinventiv.social.Interfaces.PictureClickCallbacks;
@@ -49,6 +50,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -76,6 +78,8 @@ public class MyProfileFragment extends Fragment {
     ImageView menu;
     TextView postCount, friendsCount;
     LinearLayout postss, friendss;
+    TextView noPosts;
+    TextView notifications;
 
     @SuppressLint("WrongConstant")
     @Override
@@ -83,19 +87,21 @@ public class MyProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.my_profile_fragment, container, false);
 
+        notifications = rootView.findViewById(R.id.notifications);
         profilePic = rootView.findViewById(R.id.profilePic);
         recyclerview = rootView.findViewById(R.id.recyclerview);
         name = rootView.findViewById(R.id.name);
         postss = rootView.findViewById(R.id.postss);
         friendss = rootView.findViewById(R.id.friendss);
         personName = rootView.findViewById(R.id.personName);
+        noPosts = rootView.findViewById(R.id.noPosts);
         progressPic = rootView.findViewById(R.id.progressPic);
         friendsCount = rootView.findViewById(R.id.friendsCount);
         postCount = rootView.findViewById(R.id.postCount);
         menu = rootView.findViewById(R.id.menu);
         picPicture = rootView.findViewById(R.id.picPicture);
         if (SharedPrefs.getUserModel().getPicUrl() != null) {
-            Glide.with(context).load(AppConfig.BASE_URL_Image + SharedPrefs.getUserModel().getThumbnailUrl()).into(profilePic);
+            Glide.with(context).load(AppConfig.BASE_URL_Image + SharedPrefs.getUserModel().getThumbnailUrl()).placeholder(R.drawable.ic_profile_plc).into(profilePic);
         }
         name.setText(SharedPrefs.getUserModel().getName());
         friendsCount.setText("" + SharedPrefs.getUserModel().getFriendsCount());
@@ -110,6 +116,12 @@ public class MyProfileFragment extends Fragment {
         });
         recyclerview.setLayoutManager(new GridLayoutManager(context, 3));
         recyclerview.setAdapter(adapter);
+        notifications.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), ListOfNotifications.class));
+            }
+        });
 
         picPicture.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -196,12 +208,16 @@ public class MyProfileFragment extends Fragment {
                     List<PostModel> data = response.body().getPosts();
                     HomeFragment.likesList = response.body().getLikesList() == null ? new ArrayList<>() : response.body().getLikesList();
                     if (data != null && data.size() > 0) {
+                        noPosts.setVisibility(View.GONE);
                         itemList = data;
                         adapter.setItemList(itemList);
-                        postCount.setText("" + itemList.size());
+
                         setupCache();
                         SharedPrefs.setPosts(itemList);
+                    } else {
+                        noPosts.setVisibility(View.VISIBLE);
                     }
+                    postCount.setText("" + itemList.size());
                 }
             }
 

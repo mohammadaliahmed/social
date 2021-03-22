@@ -33,7 +33,7 @@
             android:layout_below="@id/image"
             android:gravity="center"
             android:lines="2"
-            android:text="sdfdsfdsfdsfsd"
+            android:text=""
             android:textColor="#000" />
 
     </RelativeLayout>

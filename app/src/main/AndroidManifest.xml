@@ -110,13 +110,16 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-8010167933323069~6262388302"/>
 
         <service
             android:name=".Activities.Camera.UploadPostService"
-            android:enabled="true"></service>
+            android:enabled="true"/>
         <service
             android:name=".Activities.Stories.UploadStoryService"
-            android:enabled="true"></service>
+            android:enabled="true"/>
 
     </application>
 

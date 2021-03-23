@@ -52,7 +52,13 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<Notifications
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         final NotificationModel model = itemList.get(position);
 
-        Glide.with(context).load(AppConfig.BASE_URL_Image + model.getPicture()).placeholder(R.drawable.ic_profile_plc).into(holder.image);
+        if(model.getPicture().contains(",")){
+            String[] img = model.getPicture().split(",");
+            Glide.with(context).load(AppConfig.BASE_URL_Image + img[0]).placeholder(R.drawable.ic_profile_plc).into(holder.image);
+
+        }else {
+            Glide.with(context).load(AppConfig.BASE_URL_Image + model.getPicture()).placeholder(R.drawable.ic_profile_plc).into(holder.image);
+        }
         holder.name.setText(model.getTitle());
         holder.date.setText(CommonUtils.getFormattedDate(model.getTime()));
         holder.itemView.setOnClickListener(new View.OnClickListener() {

@@ -1,179 +1,246 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#fff"
     android:orientation="vertical">
 
-
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/profilePic"
-                    android:layout_width="80dp"
-
-                    android:foreground="?android:attr/selectableItemBackground"
-                    android:clickable="true"
-                    android:layout_height="80dp"
-                    android:layout_margin="15dp"
-                    android:src="@drawable/ic_profile_plc" />
-
-
-                <ProgressBar
-                    android:id="@+id/progressPic"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:visibility="gone" />
-
-            </RelativeLayout>
-
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="2"
                 android:orientation="horizontal">
 
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/profilePic"
+                        android:layout_width="80dp"
+
+                        android:layout_height="80dp"
+                        android:layout_margin="15dp"
+                        android:clickable="true"
+                        android:foreground="?android:attr/selectableItemBackground"
+                        android:src="@drawable/ic_profile_plc" />
+
+
+                    <ProgressBar
+                        android:id="@+id/progressPic"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:visibility="gone" />
+
+                </RelativeLayout>
+
+
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-
-                    android:foreground="?android:attr/selectableItemBackground"
-                    android:clickable="true"
                     android:layout_gravity="center"
-                    android:layout_weight="1"
+                    android:layout_weight="2"
+                    android:orientation="horizontal">
 
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/postCount"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="-"
-                        android:textColor="#000"
-                        android:textSize="22sp" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:clickable="true"
+                        android:foreground="?android:attr/selectableItemBackground"
+
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/postCount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="-"
+                            android:textColor="#000"
+                            android:textSize="22sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Posts"
+                            android:textColor="#000" />
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/frndssss"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="Posts"
-                        android:textColor="#000" />
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:clickable="true"
+
+                        android:foreground="?android:attr/selectableItemBackground"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/friendsCount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="-"
+                            android:textColor="#000"
+                            android:textSize="22sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Friends"
+                            android:textColor="#000" />
+
+
+                    </LinearLayout>
 
 
                 </LinearLayout>
+            </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/frndssss"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:text=" "
+
+                android:textColor="#000" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/button"
+                    android:layout_width="120dp"
+                    android:layout_height="30dp"
+
                     android:layout_gravity="center"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/curved_corners_colored"
                     android:clickable="true"
                     android:foreground="?android:attr/selectableItemBackground"
-
-                    android:layout_weight="1"
                     android:gravity="center"
-                    android:orientation="vertical">
+                    android:text="Add as Friend"
+                    android:textColor="#fff" />
 
-                    <TextView
-                        android:id="@+id/friendsCount"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="-"
-                        android:textColor="#000"
-                        android:textSize="22sp" />
+                <TextView
+                    android:id="@+id/message"
+                    android:layout_width="120dp"
+                    android:layout_height="30dp"
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Friends"
-                        android:textColor="#000" />
-
-
-                </LinearLayout>
-
+                    android:layout_gravity="center"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/grey_corners"
+                    android:clickable="true"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:gravity="center"
+                    android:text="Message"
+                    android:textColor="@color/black" />
 
             </LinearLayout>
-        </LinearLayout>
 
-        <TextView
-            android:id="@+id/name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:text=" "
-
-            android:textColor="#000" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/button"
-                android:layout_width="120dp"
-                android:layout_height="30dp"
-
-                android:foreground="?android:attr/selectableItemBackground"
-                android:clickable="true"
-                android:layout_gravity="center"
-                android:layout_margin="10dp"
-                android:background="@drawable/curved_corners_colored"
-                android:gravity="center"
-                android:text="Add as Friend"
-                android:textColor="#fff" />
-
-            <TextView
-                android:id="@+id/message"
-                android:layout_width="120dp"
-                android:layout_height="30dp"
-
-                android:foreground="?android:attr/selectableItemBackground"
-                android:clickable="true"
-                android:layout_gravity="center"
-                android:layout_margin="10dp"
-                android:background="@drawable/grey_corners"
-                android:gravity="center"
-                android:text="Message"
-                android:textColor="@color/black" />
-
-        </LinearLayout>
-
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="20dp"
-            android:background="#E9E9E9" />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerview"
-                android:layout_width="match_parent"
+            <com.google.android.gms.ads.AdView
+                android:id="@+id/mAdView"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:nestedScrollingEnabled="false" />
 
-        </RelativeLayout>
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center"
+                ads:adSize="BANNER"
+                ads:adUnitId="@string/banner_ad_unit_id" />
 
-    </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#E9E9E9" />
 
-</ScrollView>
+            <LinearLayout
+                android:id="@+id/privateLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+
+                    android:layout_gravity="center"
+                    android:layout_marginTop="70dp"
+                    android:src="@drawable/lock" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:text="This Account \nis Private"
+                    android:textColor="#000"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="20dp"
+
+                    android:gravity="center"
+                    android:text="Follow this user to see\n their photos " />
+
+            </LinearLayout>
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <RelativeLayout
+        android:id="@+id/wholeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0.8"
+        android:background="#fff"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true" />
+    </RelativeLayout>
+
+
+</RelativeLayout>

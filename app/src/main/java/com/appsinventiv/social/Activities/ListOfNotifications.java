@@ -29,6 +29,7 @@ import com.google.gson.JsonObject;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import retrofit2.Call;
@@ -74,6 +75,7 @@ public class ListOfNotifications extends AppCompatActivity {
                 if (response.code() == 200) {
                     itemList = response.body().getNotificationList();
                     if (itemList != null && itemList.size() > 0) {
+                        Collections.reverse(itemList);
                         adapter.setItemList(itemList);
                         noNoti.setVisibility(View.GONE);
                     } else {

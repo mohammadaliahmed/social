@@ -20,6 +20,7 @@ import com.appsinventiv.social.Models.UserModel;
 import com.appsinventiv.social.NetworkResponses.AddCommentResponse;
 import com.appsinventiv.social.NetworkResponses.AllCommentsResponse;
 import com.appsinventiv.social.NetworkResponses.AllStoriesResponse;
+import com.appsinventiv.social.NetworkResponses.ApiResponse;
 import com.appsinventiv.social.R;
 import com.appsinventiv.social.Utils.AppConfig;
 import com.appsinventiv.social.Utils.CommonUtils;
@@ -143,10 +144,10 @@ public class CommentsActivity extends AppCompatActivity implements NotificationO
         map.addProperty("text", comment);
         map.addProperty("time", System.currentTimeMillis());
         UserClient getResponse = AppConfig.getRetrofit().create(UserClient.class);
-        Call<AddCommentResponse> call = getResponse.addComment(map);
-        call.enqueue(new Callback<AddCommentResponse>() {
+        Call<ApiResponse> call = getResponse.addComment(map);
+        call.enqueue(new Callback<ApiResponse>() {
             @Override
-            public void onResponse(Call<AddCommentResponse> call, Response<AddCommentResponse> response) {
+            public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
                 wholeLayout.setVisibility(View.GONE);
                 if (response.code() == 200) {
                     CommentsModel object = response.body().getComment();
@@ -154,8 +155,9 @@ public class CommentsActivity extends AppCompatActivity implements NotificationO
                         commentsList.add(object);
                         adapter.setItemList(commentsList);
                         recyclerview.scrollToPosition(commentsList.size() - 1);
-
-                        sendNotification(comment);
+                        if (!SharedPrefs.getUserModel().getId().equals(postByUser.getId())) {
+                            sendNotification(comment);
+                        }
 
                     }
 
@@ -166,7 +168,7 @@ public class CommentsActivity extends AppCompatActivity implements NotificationO
             }
 
             @Override
-            public void onFailure(Call<AddCommentResponse> call, Throwable t) {
+            public void onFailure(Call<ApiResponse> call, Throwable t) {
                 wholeLayout.setVisibility(View.GONE);
                 CommonUtils.showToast(t.getMessage());
             }

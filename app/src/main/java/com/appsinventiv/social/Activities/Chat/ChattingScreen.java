@@ -47,6 +47,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -79,6 +80,7 @@ public class ChattingScreen extends AppCompatActivity {
     private Integer hisUserId;
     private boolean callededUserApi;
     private UserModel hisUserModel;
+    private String msg;
 
 
     @Override
@@ -173,7 +175,7 @@ public class ChattingScreen extends AppCompatActivity {
 
         if (requestCode == 23) {
             if (data != null) {
-               mSelected = data.getStringArrayListExtra(Pix.IMAGE_RESULTS);
+                mSelected = data.getStringArrayListExtra(Pix.IMAGE_RESULTS);
 
                 CompressImage compressImage = new CompressImage(this);
                 compressedUrl = compressImage.compressImage("" + mSelected.get(0));
@@ -304,7 +306,7 @@ public class ChattingScreen extends AppCompatActivity {
                     if (response.body() != null) {
                         callededUserApi = true;
                         hisUserModel = response.body().getUserModel();
-                        hisUserId=hisUserModel.getId();
+                        hisUserId = hisUserModel.getId();
                         chatterName.setText(hisUserModel.getName());
                         try {
                             Glide.with(ChattingScreen.this).load(AppConfig.BASE_URL_Image + hisUserModel.getThumbnailUrl()).into(image);
@@ -329,17 +331,19 @@ public class ChattingScreen extends AppCompatActivity {
 
 
     private void sendMessage(String messageType) {
+        msg = message.getText().toString();
+        message.setText("");
         UserClient getResponse = AppConfig.getRetrofit().create(UserClient.class);
 
         JsonObject map = new JsonObject();
         map.addProperty("api_username", AppConfig.API_USERNAME);
         map.addProperty("api_password", AppConfig.API_PASSOWRD);
-        map.addProperty("messageText", message.getText().toString());
+        map.addProperty("messageText", msg);
         map.addProperty("messageType", messageType);
         map.addProperty("imageUrl", liveUrl);
         map.addProperty("messageByName", SharedPrefs.getUserModel().getName());
         map.addProperty("messageById", SharedPrefs.getUserModel().getId());
-        map.addProperty("hisUserId",hisUserId);
+        map.addProperty("hisUserId", hisUserId);
         map.addProperty("roomId", roomId);
         map.addProperty("time", System.currentTimeMillis());
         Call<NewMessageResponse> call = getResponse.createMessage(map);
@@ -347,7 +351,7 @@ public class ChattingScreen extends AppCompatActivity {
             @Override
             public void onResponse(Call<NewMessageResponse> call, Response<NewMessageResponse> response) {
                 if (response.code() == 200) {
-                    message.setText("");
+
 
                     NewMessageResponse object = response.body();
                     if (object.getMessages() != null && object.getMessages().size() > 0) {

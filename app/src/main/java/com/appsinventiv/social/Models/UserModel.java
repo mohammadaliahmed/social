@@ -40,7 +40,17 @@ public class UserModel {
     @SerializedName("friendsCount")
     @Expose
     private int friendsCount;
+    @SerializedName("type")
+    @Expose
+    private Integer type;
 
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
 
     @SerializedName("requestsSent")
     @Expose

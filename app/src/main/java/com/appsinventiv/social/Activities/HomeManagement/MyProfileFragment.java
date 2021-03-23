@@ -36,6 +36,8 @@ import com.bumptech.glide.Glide;
 
 import com.fxn.pix.Options;
 import com.fxn.pix.Pix;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.gson.JsonObject;
 
 
@@ -80,6 +82,7 @@ public class MyProfileFragment extends Fragment {
     LinearLayout postss, friendss;
     TextView noPosts;
     TextView notifications;
+    AdView mAdView;
 
     @SuppressLint("WrongConstant")
     @Override
@@ -89,6 +92,9 @@ public class MyProfileFragment extends Fragment {
 
         notifications = rootView.findViewById(R.id.notifications);
         profilePic = rootView.findViewById(R.id.profilePic);
+        mAdView = rootView.findViewById(R.id.mAdView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
         recyclerview = rootView.findViewById(R.id.recyclerview);
         name = rootView.findViewById(R.id.name);
         postss = rootView.findViewById(R.id.postss);

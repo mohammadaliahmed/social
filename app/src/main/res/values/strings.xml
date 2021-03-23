@@ -4,5 +4,10 @@
     <string name="file_limit_size_upload_format">Files must be less than %sMB</string>
     <string name="video_compression_complete">Video Compression Complete</string>
 
+    <string name="banner_ad_unit_id">ca-app-pub-8010167933323069/3636224967</string>
+<!--        <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>test-->
+
+    <string name="interstitial_ad_unit_id">ca-app-pub-8010167933323069/9818489934</string>
+    <!--    <string name="interstitial_ad_unit_id">ca-app-pub-3940256099942544/1033173712</string>test-->
 
 </resources>

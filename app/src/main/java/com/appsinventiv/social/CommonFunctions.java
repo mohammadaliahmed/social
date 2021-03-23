@@ -30,7 +30,9 @@ public class CommonFunctions {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.code() == 200) {
-                    sendNotification(model.getUserModel().getFcmKey(), "New Like", SharedPrefs.getUserModel().getName() + " liked your post", model.getId());
+                    if(!SharedPrefs.getUserModel().getId().equals(model.getUserId())) {
+                        sendNotification(model.getUserModel().getFcmKey(), "New Like", SharedPrefs.getUserModel().getName() + " liked your post", model.getId());
+                    }
                 } else {
                     CommonUtils.showToast(response.message());
                 }

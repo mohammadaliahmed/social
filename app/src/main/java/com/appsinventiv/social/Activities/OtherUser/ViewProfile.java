@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.appsinventiv.social.Activities.Chat.ChattingScreen;
@@ -30,6 +31,8 @@ import com.appsinventiv.social.Utils.SharedPrefs;
 import com.appsinventiv.social.Utils.UserClient;
 import com.bumptech.glide.Glide;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.gson.JsonObject;
 
@@ -63,6 +66,9 @@ public class ViewProfile extends AppCompatActivity {
     LinearLayout frndssss;
     String accept_request;
     private UserModel my_user;
+    RelativeLayout wholeLayout;
+    AdView mAdView;
+    LinearLayout privateLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +82,12 @@ public class ViewProfile extends AppCompatActivity {
         this.setTitle("");
         userId = getIntent().getIntExtra("userId", 0);
 
+        mAdView = findViewById(R.id.mAdView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+
+        wholeLayout = findViewById(R.id.wholeLayout);
+        privateLayout = findViewById(R.id.privateLayout);
         message = findViewById(R.id.message);
         profilePic = findViewById(R.id.profilePic);
         recyclerview = findViewById(R.id.recyclerview);
@@ -112,7 +124,6 @@ public class ViewProfile extends AppCompatActivity {
                 startActivity(i);
             }
         });
-
 
 
         button.setOnClickListener(new View.OnClickListener() {
@@ -252,6 +263,9 @@ public class ViewProfile extends AppCompatActivity {
                     button.setBackground(getResources().getDrawable(R.drawable.grey_corners));
                     button.setTextColor(getResources().getColor(R.color.black));
                     button.setText("Request Sent");
+                    if (user.getType() == 1) {
+                        getDataFromServer();
+                    }
 
                 } else {
                     CommonUtils.showToast(response.message());
@@ -303,6 +317,7 @@ public class ViewProfile extends AppCompatActivity {
 
 
     private void getDataFromServer() {
+        wholeLayout.setVisibility(View.VISIBLE);
         JsonObject map = new JsonObject();
         map.addProperty("api_username", AppConfig.API_USERNAME);
         map.addProperty("api_password", AppConfig.API_PASSOWRD);
@@ -388,17 +403,32 @@ public class ViewProfile extends AppCompatActivity {
         friendsCount.setText("" + friendCount);
         this.setTitle(userModel.getName());
 
-          if (SharedPrefs.getUserModel().getFriendsList() != null) {
+
+        if (SharedPrefs.getUserModel().getFriendsList() != null) {
             if (SharedPrefs.getUserModel().getFriendsList().contains(userId)) {
                 whatToDo = 1;//friend
                 getPostsDataFromServer();
             } else if (SharedPrefs.getUserModel().getRequestSentList().contains(userId)) {
                 whatToDo = 2;//request sent
+                if (userModel.getType() == 1) {
+                    getPostsDataFromServer();
+                } else {
+                    privateLayout.setVisibility(View.VISIBLE);
+                }
             } else if (SharedPrefs.getUserModel().getRequestsReceivedList().contains(userId)) {
                 whatToDo = 3;//accept request
+                if (userModel.getType() == 1) {
+                    getPostsDataFromServer();
+                }
             } else {
                 whatToDo = 0;//add as friend
+                if (userModel.getType() == 1) {
+                    getPostsDataFromServer();
+                } else {
+                    privateLayout.setVisibility(View.VISIBLE);
+                }
             }
+
 
         }
         if (getIntent().getStringExtra("accept_request") != null) {
@@ -407,7 +437,6 @@ public class ViewProfile extends AppCompatActivity {
                 whatToDo = 3;
             }
         }
-
 
 
         if (whatToDo == 0) {
@@ -428,7 +457,7 @@ public class ViewProfile extends AppCompatActivity {
             button.setTextColor(getResources().getColor(R.color.white));
             button.setText("Accept Request");
         }
-
+        wholeLayout.setVisibility(View.GONE);
 
 
     }

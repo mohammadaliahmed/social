@@ -155,7 +155,7 @@ public interface UserClient {
 
     @Headers("Content-Type: application/json")
     @POST("api/comments/addComment")
-    Call<AddCommentResponse> addComment(
+    Call<ApiResponse> addComment(
             @Body JsonObject jsonObject
 
     );
@@ -216,6 +216,13 @@ public interface UserClient {
 
     );
 
+
+    @Headers("Content-Type: application/json")
+    @POST("api/user/updateProfileType")
+    Call<ApiResponse> updateProfileType(
+            @Body JsonObject jsonObject
+
+    );
 
     @Headers("Content-Type: application/json")
     @POST("api/user/login")

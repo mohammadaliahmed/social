@@ -91,6 +91,7 @@ public class StoryFragment extends Fragment implements StoriesProgressView.Stori
     ImageView send;
     RelativeLayout viewStoryBy;
 
+    TextView profileType;
 
     private View.OnTouchListener onTouchListener = new View.OnTouchListener() {
         @Override
@@ -161,6 +162,7 @@ public class StoryFragment extends Fragment implements StoriesProgressView.Stori
 
         View rootView = inflater.inflate(R.layout.activity_story, null);
         storyyy = rootView.findViewById(R.id.storyyy);
+        profileType = rootView.findViewById(R.id.profileType);
         viewStoryBy = rootView.findViewById(R.id.viewStoryBy);
         userPic = rootView.findViewById(R.id.userPic);
         storyByPic = rootView.findViewById(R.id.storyByPic);
@@ -178,7 +180,6 @@ public class StoryFragment extends Fragment implements StoriesProgressView.Stori
                 context.startActivity(i);
             }
         });
-
 
 
         KeyboardUtils.addKeyboardToggleListener(getActivity(), new KeyboardUtils.SoftKeyboardToggleListener() {
@@ -451,6 +452,11 @@ public class StoryFragment extends Fragment implements StoriesProgressView.Stori
 
     private void prepareStoriesList() {
         mStoriesList = MainActivity.arrayLists.get(position);
+        if (MainActivity.arrayLists.get(position).get(0).getUser().getType() == 1) {
+            profileType.setVisibility(View.VISIBLE);
+        } else {
+            profileType.setVisibility(View.GONE);
+        }
         Glide.with(context).load(AppConfig.BASE_URL_Image + MainActivity.arrayLists.get(position).get(0).getUser().getThumbnailUrl()).into(storyByPic);
         storyByName.setText(MainActivity.arrayLists.get(position).get(0).getUser().getName());
         long dur = System.currentTimeMillis() - (MainActivity.arrayLists.get(position).get(counter).getTime());

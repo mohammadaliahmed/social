@@ -4,8 +4,8 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class AppConfig {
-//        public static String LPTOP_ID = "http://192.168.137.1/socialserver/";
-        public static String LPTOP_ID = "http://192.168.8.101/socialserver/";
+        public static String LPTOP_ID = "http://192.168.137.1/socialserver/";
+//        public static String LPTOP_ID = "http://192.168.8.101/socialserver/";
     public static String SERVER_URL = "http://social.phonemart.co/";
     public static String BASE_URL = SERVER_URL;
     public static String API_USERNAME = "WF9.FJ8u'FP{c5Pw";

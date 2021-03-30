@@ -2,7 +2,9 @@ package com.appsinventiv.social.Activities.HomeManagement;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,10 +12,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.appsinventiv.social.Activities.AccountSettings;
@@ -22,7 +26,9 @@ import com.appsinventiv.social.Adapters.MyProfilePostsAdapter;
 import com.appsinventiv.social.Activities.MyListOfFriends;
 import com.appsinventiv.social.Interfaces.PictureClickCallbacks;
 import com.appsinventiv.social.Models.PostModel;
+import com.appsinventiv.social.Models.UserModel;
 import com.appsinventiv.social.NetworkResponses.AllPostsResponse;
+import com.appsinventiv.social.NetworkResponses.ApiResponse;
 import com.appsinventiv.social.NetworkResponses.LoginResponse;
 import com.appsinventiv.social.R;
 import com.appsinventiv.social.Utils.AppConfig;
@@ -84,6 +90,8 @@ public class MyProfileFragment extends Fragment {
     TextView notifications;
     AdView mAdView;
 
+    Switch profileType;
+
     @SuppressLint("WrongConstant")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -91,6 +99,7 @@ public class MyProfileFragment extends Fragment {
         rootView = inflater.inflate(R.layout.my_profile_fragment, container, false);
 
         notifications = rootView.findViewById(R.id.notifications);
+        profileType = rootView.findViewById(R.id.profileType);
         profilePic = rootView.findViewById(R.id.profilePic);
         mAdView = rootView.findViewById(R.id.mAdView);
         AdRequest adRequest = new AdRequest.Builder().build();
@@ -109,6 +118,41 @@ public class MyProfileFragment extends Fragment {
         if (SharedPrefs.getUserModel().getPicUrl() != null) {
             Glide.with(context).load(AppConfig.BASE_URL_Image + SharedPrefs.getUserModel().getThumbnailUrl()).placeholder(R.drawable.ic_profile_plc).into(profilePic);
         }
+
+        if (SharedPrefs.getUserModel().getType() == 1) {
+            profileType.setChecked(true);
+        } else {
+            profileType.setChecked(false);
+        }
+        profileType.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (buttonView.isPressed()) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    builder.setTitle("Make profile " + (isChecked ? "public" : "private"));
+                    String msg;
+                    if (isChecked) {
+                        msg = "Making account public will allow everyone will be able to see your posts and stories";
+                    } else {
+                        msg = "Making account private will only allow friends to see your posts and stories";
+
+                    }
+                    builder.setMessage(msg);
+                    builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            updateDataToServer(isChecked);
+
+                        }
+                    });
+                    builder.setNegativeButton("Cancel", null);
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+
+                }
+            }
+        });
+
         name.setText(SharedPrefs.getUserModel().getName());
         friendsCount.setText("" + SharedPrefs.getUserModel().getFriendsCount());
         personName.setText(SharedPrefs.getUserModel().getName());
@@ -153,6 +197,35 @@ public class MyProfileFragment extends Fragment {
 
         getDataFromServer();
         return rootView;
+    }
+
+    private void updateDataToServer(boolean isChecked) {
+        CommonUtils.showToast("Profile Updated");
+        UserClient getResponse = AppConfig.getRetrofit().create(UserClient.class);
+        JsonObject map = new JsonObject();
+        map.addProperty("api_username", AppConfig.API_USERNAME);
+        map.addProperty("api_password", AppConfig.API_PASSOWRD);
+        map.addProperty("id", SharedPrefs.getUserModel().getId());
+        map.addProperty("type", isChecked ? 1 : 0);
+
+        Call<ApiResponse> call = getResponse.updateProfileType(map);
+        call.enqueue(new Callback<ApiResponse>() {
+            @Override
+            public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
+                if (response.code() == 200) {
+                    UserModel user = response.body().getUser();
+                    if (user != null) {
+                        SharedPrefs.setUserModel(user);
+                        CommonUtils.showToast("Done");
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse> call, Throwable t) {
+
+            }
+        });
     }
 
     private void loadFragment(Fragment fragment) {

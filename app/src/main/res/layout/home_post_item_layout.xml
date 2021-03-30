@@ -17,8 +17,9 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/postByPic"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:padding="2dp"
         android:layout_marginLeft="10dp"
         android:src="@drawable/ic_profile_plc" />
 
@@ -28,9 +29,23 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="60dp"
-        android:layout_marginTop="5dp"
-        android:text=""
+        android:lines="1"
+        android:text="Ali AHmed"
         android:textColor="#000" />
+
+    <TextView
+        android:id="@+id/profileType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/postByName"
+        android:layout_marginLeft="60dp"
+        android:background="@drawable/btn_bg"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:text="Public Profile"
+        android:textColor="#fff"
+        android:textSize="8sp"
+        android:visibility="gone" />
 
 
     <RelativeLayout
@@ -99,10 +114,10 @@
     <LinearLayout
         android:id="@+id/icons"
         android:layout_width="wrap_content"
-        android:layout_marginTop="5dp"
         android:layout_height="wrap_content"
         android:layout_below="@id/content"
         android:layout_marginLeft="10dp"
+        android:layout_marginTop="5dp"
         android:orientation="horizontal">
 
         <ImageView
@@ -132,9 +147,9 @@
         android:id="@+id/likesCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="5dp"
         android:layout_below="@id/icons"
         android:layout_marginLeft="5dp"
+        android:padding="5dp"
         android:text="0 Likes"
         android:textColor="#000"
         android:textSize="13sp"

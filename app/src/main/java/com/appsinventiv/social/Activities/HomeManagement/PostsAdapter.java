@@ -83,6 +83,11 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             case POST_LAYOUT:
 
                 final PostModel model = dataArrayList.get(position);
+                if (model.getUserModel().getType() == 1) {
+                    holder.profileType.setVisibility(View.VISIBLE);
+                } else {
+                    holder.profileType.setVisibility(View.GONE);
+                }
                 holder.postByName.setText(model.getUserModel().getName());
                 Glide.with(context).load(AppConfig.BASE_URL_Image + model.getUserModel().getThumbnailUrl()).into(holder.postByPic);
                 Glide.with(context).load(AppConfig.BASE_URL_Image + SharedPrefs.getUserModel().getThumbnailUrl()).into(holder.commenterImg);
@@ -415,7 +420,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView postByName, likesCount, time, addComment, lastComment, commentsCount, picCount, duration;
+        TextView postByName, likesCount, time, addComment, lastComment, commentsCount, picCount, profileType;
         ImageView mainImage, showLike;
         CircleImageView commenterImg, postByPic, flag;
         ImageView muteIcon, comments, likeBtn, menu, forward, download, repost;
@@ -425,6 +430,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+            profileType = itemView.findViewById(R.id.profileType);
             slider = itemView.findViewById(R.id.slider);
             dots_indicator = itemView.findViewById(R.id.dots_indicator);
             picCount = itemView.findViewById(R.id.picCount);

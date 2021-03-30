@@ -69,6 +69,7 @@ public class ViewProfile extends AppCompatActivity {
     RelativeLayout wholeLayout;
     AdView mAdView;
     LinearLayout privateLayout;
+    TextView profileType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +87,7 @@ public class ViewProfile extends AppCompatActivity {
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
 
+        profileType = findViewById(R.id.profileType);
         wholeLayout = findViewById(R.id.wholeLayout);
         privateLayout = findViewById(R.id.privateLayout);
         message = findViewById(R.id.message);
@@ -458,6 +460,11 @@ public class ViewProfile extends AppCompatActivity {
             button.setText("Accept Request");
         }
         wholeLayout.setVisibility(View.GONE);
+        if (userModel.getType() == 1) {
+            profileType.setVisibility(View.VISIBLE);
+        } else {
+            profileType.setVisibility(View.GONE);
+        }
 
 
     }

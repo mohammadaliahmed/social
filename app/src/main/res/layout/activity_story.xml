@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/storyyy"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/storyyy"
     android:background="#000">
 
 
@@ -103,9 +103,9 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/viewStoryBy"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/viewStoryBy"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="20dp">
 
@@ -118,13 +118,28 @@
         <TextView
             android:id="@+id/storyByName"
             android:layout_width="wrap_content"
-            android:padding="5dp"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
             android:layout_marginLeft="40dp"
-            android:text=""
+            android:padding="5dp"
+            android:text="Ali Ahmed"
             android:textColor="#fff"
             android:textStyle="bold" />
+
+        <TextView
+
+            android:id="@+id/profileType"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="-5dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/storyByName"
+            android:layout_marginLeft="45dp"
+            android:background="@drawable/btn_bg"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:text="Public Profile"
+            android:textColor="#fff"
+            android:textSize="8sp"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/time"

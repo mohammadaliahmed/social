@@ -155,7 +155,7 @@ public class MyProfileFragment extends Fragment {
 
         name.setText(SharedPrefs.getUserModel().getName());
         friendsCount.setText("" + SharedPrefs.getUserModel().getFriendsCount());
-        personName.setText(SharedPrefs.getUserModel().getName());
+        personName.setText(SharedPrefs.getUserModel().getUsername());
         adapter = new MyProfilePostsAdapter(context, itemList, new PictureClickCallbacks() {
             @Override
             public void onPictureClicked(int position) {

@@ -30,10 +30,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="60dp"
+            android:layout_marginLeft="10dp"
             android:text=""
             android:textColor="#000"
-            android:textSize="20sp" />
+            android:textSize="22sp"
+            android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/menu"
@@ -79,6 +80,7 @@
                         android:id="@+id/name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:gravity="center"
                         android:layout_below="@id/profilePic"
                         android:layout_marginLeft="20dp"
                         android:text=" "

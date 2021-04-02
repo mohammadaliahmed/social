@@ -88,9 +88,9 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
                 } else {
                     holder.profileType.setVisibility(View.GONE);
                 }
-                holder.postByName.setText(model.getUserModel().getName());
-                Glide.with(context).load(AppConfig.BASE_URL_Image + model.getUserModel().getThumbnailUrl()).into(holder.postByPic);
-                Glide.with(context).load(AppConfig.BASE_URL_Image + SharedPrefs.getUserModel().getThumbnailUrl()).into(holder.commenterImg);
+                holder.postByName.setText(model.getUserModel().getUsername());
+                Glide.with(context).load(AppConfig.BASE_URL_Image + model.getUserModel().getThumbnailUrl()).placeholder(R.drawable.ic_profile_plc).into(holder.postByPic);
+                Glide.with(context).load(AppConfig.BASE_URL_Image + SharedPrefs.getUserModel().getThumbnailUrl()).placeholder(R.drawable.ic_profile_plc).into(holder.commenterImg);
                 holder.likesCount.setText(model.getLikesCount() + " likes");
                 if (HomeFragment.likesList.contains(model.getId())) {
                     holder.likeBtn.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_like_fill));

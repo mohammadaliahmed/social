@@ -44,6 +44,7 @@ public class UserModel {
     @Expose
     private Integer type;
 
+
     public Integer getType() {
         return type;
     }

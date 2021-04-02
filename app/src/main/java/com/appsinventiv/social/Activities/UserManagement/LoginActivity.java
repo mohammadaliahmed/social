@@ -35,6 +35,7 @@ import com.google.gson.JsonObject;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -44,13 +45,14 @@ public class LoginActivity extends AppCompatActivity {
     GoogleSignInAccount account;
     RelativeLayout google;
     ProgressBar wholeLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        google=findViewById(R.id.google);
-        wholeLayout=findViewById(R.id.wholeLayout);
+        google = findViewById(R.id.google);
+        wholeLayout = findViewById(R.id.wholeLayout);
         GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
         apiClient = new GoogleApiClient.Builder(this).enableAutoManage(this, new GoogleApiClient.OnConnectionFailedListener() {
             @Override
@@ -130,13 +132,14 @@ public class LoginActivity extends AppCompatActivity {
     private void loginNow() {
         wholeLayout.setVisibility(View.VISIBLE);
         UserClient getResponse = AppConfig.getRetrofit().create(UserClient.class);
-        JsonObject map=new JsonObject();
+        JsonObject map = new JsonObject();
         map.addProperty("api_username", AppConfig.API_USERNAME);
         map.addProperty("api_password", AppConfig.API_PASSOWRD);
-        map.addProperty("name",account.getDisplayName());
-        map.addProperty("email",account.getEmail());
-        map.addProperty("password",account.getEmail().replace("-","").replace("@",""));
-        map.addProperty("picUrl",""+account.getPhotoUrl());
+        map.addProperty("name", account.getDisplayName());
+        map.addProperty("email", account.getEmail());
+        map.addProperty("username", account.getEmail().split("@")[0]);
+        map.addProperty("password", account.getEmail().replace("-", "").replace("@", ""));
+        map.addProperty("picUrl", "" + account.getPhotoUrl());
         Call<ApiResponse> call = getResponse.loginUser(
                 map
 
@@ -147,12 +150,12 @@ public class LoginActivity extends AppCompatActivity {
             public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
                 wholeLayout.setVisibility(View.GONE);
                 if (response.code() == 200) {
-                        UserModel user = response.body().getUser();
-                        CommonUtils.showToast("Login Successful");
-                        SharedPrefs.setUserModel(user);
-                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                        finish();
-                    }else{
+                    UserModel user = response.body().getUser();
+                    CommonUtils.showToast("Login Successful");
+                    SharedPrefs.setUserModel(user);
+                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                    finish();
+                } else {
                     CommonUtils.showToast(response.message());
                 }
 

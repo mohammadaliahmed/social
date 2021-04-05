@@ -7,14 +7,16 @@
         android:title="" />
 
     <item
-        android:id="@+id/navigation_chats"
-        android:icon="@drawable/ic_chat_bubble"
+        android:id="@+id/navigation_notifications"
+        android:icon="@drawable/bell"
         android:title="" />
+
 
     <item
         android:id="@+id/navigation_post"
         android:icon="@drawable/ic_post"
         android:title="" />
+
     <item
         android:id="@+id/navigation_search"
         android:icon="@drawable/ic_search_home"

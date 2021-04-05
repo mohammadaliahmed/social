@@ -89,8 +89,8 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
                     holder.profileType.setVisibility(View.GONE);
                 }
                 holder.postByName.setText(model.getUserModel().getUsername());
-                Glide.with(context).load(AppConfig.BASE_URL_Image + model.getUserModel().getThumbnailUrl()).placeholder(R.drawable.ic_profile_plc).into(holder.postByPic);
-                Glide.with(context).load(AppConfig.BASE_URL_Image + SharedPrefs.getUserModel().getThumbnailUrl()).placeholder(R.drawable.ic_profile_plc).into(holder.commenterImg);
+                Glide.with(context).load(AppConfig.BASE_URL_Image + model.getUserModel().getUsername() + "/" + model.getUserModel().getThumbnailUrl()).placeholder(R.drawable.ic_profile_plc).into(holder.postByPic);
+                Glide.with(context).load(AppConfig.BASE_URL_Image + SharedPrefs.getUserModel().getUsername() + "/" + SharedPrefs.getUserModel().getThumbnailUrl()).placeholder(R.drawable.ic_profile_plc).into(holder.commenterImg);
                 holder.likesCount.setText(model.getLikesCount() + " likes");
                 if (HomeFragment.likesList.contains(model.getId())) {
                     holder.likeBtn.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_like_fill));
@@ -107,7 +107,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
                     holder.slider.setVisibility(View.GONE);
                     holder.picCount.setVisibility(View.GONE);
                     holder.dots_indicator.setVisibility(View.GONE);
-                    Glide.with(context).load(AppConfig.BASE_URL_Image + model.getImagesUrl()).into(holder.mainImage);
+                    Glide.with(context).load(AppConfig.BASE_URL_Image +model.getUserModel().getUsername()+"/"+ model.getImagesUrl()).into(holder.mainImage);
                 } else if (model.getPostType().equalsIgnoreCase("multi")) {
                     holder.slider.setVisibility(View.VISIBLE);
                     holder.mainImage.setVisibility(View.GONE);
@@ -116,7 +116,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
                     final List<String> list = new ArrayList<String>(Arrays.asList(model.getImagesUrl().split(",")));
                     holder.picCount.setText(1 + "/" + (list == null ? 1 : list.size()));
 
-                    MainSliderAdapter mViewPagerAdapter = new MainSliderAdapter(context, list, new MainSliderAdapter.ClicksCallback() {
+                    MainSliderAdapter mViewPagerAdapter = new MainSliderAdapter(context, list,model.getUserModel().getUsername(), new MainSliderAdapter.ClicksCallback() {
                         @Override
                         public void onDoubleClick() {
 

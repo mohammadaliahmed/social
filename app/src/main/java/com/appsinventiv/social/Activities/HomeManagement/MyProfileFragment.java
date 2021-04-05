@@ -50,6 +50,7 @@ import com.google.gson.JsonObject;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -116,7 +117,7 @@ public class MyProfileFragment extends Fragment {
         menu = rootView.findViewById(R.id.menu);
         picPicture = rootView.findViewById(R.id.picPicture);
         if (SharedPrefs.getUserModel().getPicUrl() != null) {
-            Glide.with(context).load(AppConfig.BASE_URL_Image + SharedPrefs.getUserModel().getThumbnailUrl()).placeholder(R.drawable.ic_profile_plc).into(profilePic);
+            Glide.with(context).load(AppConfig.BASE_URL_Image +SharedPrefs.getUserModel().getUsername()+"/"+ SharedPrefs.getUserModel().getThumbnailUrl()).placeholder(R.drawable.ic_profile_plc).into(profilePic);
         }
 
         if (SharedPrefs.getUserModel().getType() == 1) {
@@ -335,7 +336,7 @@ public class MyProfileFragment extends Fragment {
                         if (object.getUser() != null) {
                             SharedPrefs.setUserModel(object.getUser());
                             CommonUtils.showToast("Picture Uploaded");
-                            Glide.with(context).load(AppConfig.BASE_URL_Image + SharedPrefs.getUserModel().getThumbnailUrl()).into(profilePic);
+                            Glide.with(context).load(AppConfig.BASE_URL_Image +SharedPrefs.getUserModel().getUsername()+"/"+ SharedPrefs.getUserModel().getThumbnailUrl()).into(profilePic);
                         }
                     }
                 } else {
@@ -377,11 +378,19 @@ public class MyProfileFragment extends Fragment {
         UserClient service = AppConfig.getRetrofit().create(UserClient.class);
 
         RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), file);
+        RequestBody token = RequestBody.create(
+                MediaType.parse("text/plain"), "token_string");
+
         MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("photo", file.getName(), requestBody);
-        RequestBody filename = RequestBody.create(MediaType.parse("text/plain"), file.getName());
+        RequestBody username = RequestBody.create(MediaType.parse("text/plain"), SharedPrefs.getUserModel().getUsername());
+        HashMap<String, RequestBody> map = new HashMap<>();
+        map.put("token", token);
+        map.put("photo", requestBody);
+        map.put("username", username);
+        // finally, execute the request
+        Call<ResponseBody> call = service.uploadFile1(fileToUpload, map);
 
         // finally, execute the request
-        Call<ResponseBody> call = service.uploadFile(fileToUpload, filename);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -418,11 +427,17 @@ public class MyProfileFragment extends Fragment {
         UserClient service = AppConfig.getRetrofit().create(UserClient.class);
 
         RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), file);
-        MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("photo", file.getName(), requestBody);
-        RequestBody filename = RequestBody.create(MediaType.parse("text/plain"), file.getName());
+        RequestBody token = RequestBody.create(
+                MediaType.parse("text/plain"), "token_string");
 
+        MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("photo", file.getName(), requestBody);
+        RequestBody username = RequestBody.create(MediaType.parse("text/plain"), SharedPrefs.getUserModel().getUsername());
+        HashMap<String, RequestBody> map = new HashMap<>();
+        map.put("token", token);
+        map.put("photo", requestBody);
+        map.put("username", username);
         // finally, execute the request
-        Call<ResponseBody> call = service.uploadFile(fileToUpload, filename);
+        Call<ResponseBody> call = service.uploadFile1(fileToUpload, map);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

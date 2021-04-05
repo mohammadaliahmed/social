@@ -2,6 +2,7 @@ package com.appsinventiv.social.NetworkResponses;
 
 import com.appsinventiv.social.Models.CommentsModel;
 import com.appsinventiv.social.Models.NotificationModel;
+import com.appsinventiv.social.Models.PostModel;
 import com.appsinventiv.social.Models.UserModel;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -27,6 +28,40 @@ public class ApiResponse {
     @SerializedName("comment")
     @Expose
     private CommentsModel comment = null;
+    @SerializedName("posts")
+    @Expose
+    private List<PostModel> posts = null;
+    @SerializedName("post")
+    @Expose
+    private PostModel post = null;
+
+    @SerializedName("likes")
+    @Expose
+    private List<Integer> likesList = null;
+
+    public List<Integer> getLikesList() {
+        return likesList;
+    }
+
+    public void setLikesList(List<Integer> likesList) {
+        this.likesList = likesList;
+    }
+
+    public PostModel getPost() {
+        return post;
+    }
+
+    public void setPost(PostModel post) {
+        this.post = post;
+    }
+
+    public List<PostModel> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(List<PostModel> posts) {
+        this.posts = posts;
+    }
 
     public CommentsModel getComment() {
         return comment;

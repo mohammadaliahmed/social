@@ -47,7 +47,7 @@ public class MyFriendsListAdapter extends RecyclerView.Adapter<MyFriendsListAdap
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         final UserModel model = itemList.get(position);
-        Glide.with(context).load(AppConfig.BASE_URL_Image + model.getThumbnailUrl()).placeholder(R.drawable.ic_profile_plc).into(holder.image);
+        Glide.with(context).load(AppConfig.BASE_URL_Image +model.getUsername()+"/"+ model.getThumbnailUrl()).placeholder(R.drawable.ic_profile_plc).into(holder.image);
         holder.name.setText(model.getName());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

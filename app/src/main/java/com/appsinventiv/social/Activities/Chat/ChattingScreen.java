@@ -307,9 +307,9 @@ public class ChattingScreen extends AppCompatActivity {
                         callededUserApi = true;
                         hisUserModel = response.body().getUserModel();
                         hisUserId = hisUserModel.getId();
-                        chatterName.setText(hisUserModel.getName());
+                        chatterName.setText(hisUserModel.getUsername());
                         try {
-                            Glide.with(ChattingScreen.this).load(AppConfig.BASE_URL_Image + hisUserModel.getThumbnailUrl()).into(image);
+                            Glide.with(ChattingScreen.this).load(AppConfig.BASE_URL_Image +hisUserModel.getUsername()+"/"+ hisUserModel.getThumbnailUrl()).into(image);
 
                         } catch (Exception e) {
 

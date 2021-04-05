@@ -17,6 +17,7 @@ import java.util.HashMap;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class HomeStoriesAdapter extends RecyclerView.Adapter<HomeStoriesAdapter.ViewHolder> {
@@ -59,8 +60,8 @@ public class HomeStoriesAdapter extends RecyclerView.Adapter<HomeStoriesAdapter.
 //            }
 //        }
 
-        holder.storyName.setText(model.get(0).getUser().getName());
-        Glide.with(context).load(AppConfig.BASE_URL_Image+model.get(0).getUser().getThumbnailUrl()).into(holder.storyImg);
+        holder.storyName.setText(model.get(0).getUser().getUsername());
+        Glide.with(context).load(AppConfig.BASE_URL_Image + model.get(0).getUser().getUsername() + "/" + model.get(0).getUser().getThumbnailUrl()).into(holder.storyImg);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

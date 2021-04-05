@@ -95,6 +95,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".Activities.LikesList" />
         <activity android:name=".Activities.ListOfNotifications" />
+        <activity android:name=".Activities.Chat.ChatActivity" />
 
         <service android:name=".Utils.MyFirebaseMessagingService">
             <intent-filter>

@@ -29,6 +29,7 @@ import com.appsinventiv.social.CommonFunctions;
 import com.appsinventiv.social.Models.PostModel;
 import com.appsinventiv.social.NetworkResponses.AllPostsResponse;
 import com.appsinventiv.social.NetworkResponses.AllStoriesResponse;
+import com.appsinventiv.social.NetworkResponses.ApiResponse;
 import com.appsinventiv.social.NetworkResponses.PostResponse;
 import com.appsinventiv.social.R;
 import com.appsinventiv.social.Utils.AppConfig;
@@ -98,25 +99,26 @@ public class ViewPost extends AppCompatActivity {
         JsonObject map = new JsonObject();
         map.addProperty("api_username", AppConfig.API_USERNAME);
         map.addProperty("api_password", AppConfig.API_PASSOWRD);
-        map.addProperty("post_id", postId);
+        map.addProperty("id", postId);
         map.addProperty("user_id", SharedPrefs.getUserModel().getId());
         UserClient getResponse = AppConfig.getRetrofit().create(UserClient.class);
-        Call<AllPostsResponse> call = getResponse.viewPost(map);
-        call.enqueue(new Callback<AllPostsResponse>() {
+        Call<ApiResponse> call = getResponse.viewPost(map);
+        call.enqueue(new Callback<ApiResponse>() {
             @Override
-            public void onResponse(Call<AllPostsResponse> call, Response<AllPostsResponse> response) {
+            public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
                 if (response.code() == 200) {
-                    List<PostModel> data = response.body().getPosts();
-                    likesList = response.body().getLikesList() == null ? new ArrayList<>() : response.body().getLikesList();
-                    if (data != null && data.size() > 0) {
-                        model = data.get(0);
+                    PostModel data = response.body().getPost();
+                    if (data != null) {
+                        model = data;
+                        likesList = response.body().getLikesList() == null ? new ArrayList<>() : response.body().getLikesList();
+
                         setupUI();
                     }
                 }
             }
 
             @Override
-            public void onFailure(Call<AllPostsResponse> call, Throwable t) {
+            public void onFailure(Call<ApiResponse> call, Throwable t) {
                 CommonUtils.showToast(t.getMessage());
             }
         });
@@ -129,9 +131,9 @@ public class ViewPost extends AppCompatActivity {
         likesCount.setText(model.getLikesCount() + " likes");
 
         postByName.setText(model.getUserModel().getName());
-        Glide.with(this).load(AppConfig.BASE_URL_Image+model.getUserModel().getThumbnailUrl()).into(postByPic);
-        Glide.with(this).load(AppConfig.BASE_URL_Image+SharedPrefs.getUserModel().getThumbnailUrl()).into(commenterImg);
-        if (HomeFragment.likesList.contains(model.getId())) {
+        Glide.with(this).load(AppConfig.BASE_URL_Image + model.getUserModel().getUsername() + "/" + model.getUserModel().getThumbnailUrl()).into(postByPic);
+        Glide.with(this).load(AppConfig.BASE_URL_Image + model.getUserModel().getUsername() + "/" + SharedPrefs.getUserModel().getThumbnailUrl()).into(commenterImg);
+        if (likesList.contains(model.getId())) {
             likeBtn.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_like_fill));
             model.setLiked(true);
         } else {
@@ -146,7 +148,7 @@ public class ViewPost extends AppCompatActivity {
             slider.setVisibility(View.GONE);
             picCount.setVisibility(View.GONE);
             dots_indicator.setVisibility(View.GONE);
-            Glide.with(this).load(AppConfig.BASE_URL_Image + model.getImagesUrl()).into(mainImage);
+            Glide.with(this).load(AppConfig.BASE_URL_Image + model.getUserModel().getUsername()+"/"+model.getImagesUrl()).into(mainImage);
         } else if (model.getPostType().equalsIgnoreCase("multi")) {
             slider.setVisibility(View.VISIBLE);
             mainImage.setVisibility(View.GONE);
@@ -155,7 +157,7 @@ public class ViewPost extends AppCompatActivity {
             final List<String> list = new ArrayList<String>(Arrays.asList(model.getImagesUrl().split(",")));
             picCount.setText(1 + "/" + (list == null ? 1 : list.size()));
 
-            MainSliderAdapter mViewPagerAdapter = new MainSliderAdapter(this, list, new MainSliderAdapter.ClicksCallback() {
+            MainSliderAdapter mViewPagerAdapter = new MainSliderAdapter(this, list, model.getUserModel().getUsername(), new MainSliderAdapter.ClicksCallback() {
                 @Override
                 public void onDoubleClick() {
 

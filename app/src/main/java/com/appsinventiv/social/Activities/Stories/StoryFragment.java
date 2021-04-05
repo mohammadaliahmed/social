@@ -216,7 +216,7 @@ public class StoryFragment extends Fragment implements StoriesProgressView.Stori
 
 
         if (SharedPrefs.getUserModel().getPicUrl() != null) {
-            Glide.with(context).load(AppConfig.BASE_URL_Image + SharedPrefs.getUserModel().getThumbnailUrl()).into(userPic);
+            Glide.with(context).load(AppConfig.BASE_URL_Image + SharedPrefs.getUserModel().getUsername() + "/" + SharedPrefs.getUserModel().getThumbnailUrl()).into(userPic);
         }
 
 
@@ -457,8 +457,8 @@ public class StoryFragment extends Fragment implements StoriesProgressView.Stori
         } else {
             profileType.setVisibility(View.GONE);
         }
-        Glide.with(context).load(AppConfig.BASE_URL_Image + MainActivity.arrayLists.get(position).get(0).getUser().getThumbnailUrl()).into(storyByPic);
-        storyByName.setText(MainActivity.arrayLists.get(position).get(0).getUser().getName());
+        Glide.with(context).load(AppConfig.BASE_URL_Image + MainActivity.arrayLists.get(position).get(0).getUser().getUsername() + "/" + MainActivity.arrayLists.get(position).get(0).getUser().getThumbnailUrl()).into(storyByPic);
+        storyByName.setText(MainActivity.arrayLists.get(position).get(0).getUser().getUsername());
         long dur = System.currentTimeMillis() - (MainActivity.arrayLists.get(position).get(counter).getTime());
 
 

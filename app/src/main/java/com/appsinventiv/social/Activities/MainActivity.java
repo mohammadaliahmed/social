@@ -33,9 +33,9 @@ import android.widget.LinearLayout;
 import com.appsinventiv.social.Activities.Camera.CameraActivity;
 import com.appsinventiv.social.Activities.Camera.PhotoRedirectActivity;
 import com.appsinventiv.social.Activities.Camera.TextStatusActivity;
-import com.appsinventiv.social.Activities.HomeManagement.ChatsFragment;
 import com.appsinventiv.social.Activities.HomeManagement.HomeFragment;
 import com.appsinventiv.social.Activities.HomeManagement.MyProfileFragment;
+import com.appsinventiv.social.Activities.HomeManagement.NotificationsFragment;
 import com.appsinventiv.social.Activities.HomeManagement.SearchFragment;
 import com.appsinventiv.social.Models.StoriesPickedModel;
 import com.appsinventiv.social.Models.StoryModel;
@@ -230,8 +230,8 @@ public class MainActivity extends AppCompatActivity {
                     loadFragment(fragment);
 
                     return true;
-                case R.id.navigation_chats:
-                    fragment = new ChatsFragment();
+                case R.id.navigation_search:
+                    fragment = new SearchFragment();
                     loadFragment(fragment);
                     return true;
                 case R.id.navigation_post:
@@ -240,8 +240,8 @@ public class MainActivity extends AppCompatActivity {
 //                    showBottomSheet();
                     initMatisse();
                     return true;
-                case R.id.navigation_search:
-                    fragment = new SearchFragment();
+                case R.id.navigation_notifications:
+                    fragment = new NotificationsFragment();
                     loadFragment(fragment);
                     return true;
                 case R.id.navigation_profile:

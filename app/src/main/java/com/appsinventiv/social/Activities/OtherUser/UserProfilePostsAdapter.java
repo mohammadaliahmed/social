@@ -55,7 +55,7 @@ public class UserProfilePostsAdapter extends RecyclerView.Adapter<UserProfilePos
         if (model.getPostType().equalsIgnoreCase("image")) {
             holder.videoIcon.setVisibility(View.GONE);
             holder.multiIcon.setVisibility(View.GONE);
-            Glide.with(context).load(AppConfig.BASE_URL_Image + model.getImagesUrl()).into(holder.image);
+            Glide.with(context).load(AppConfig.BASE_URL_Image +model.getUserModel().getUsername()+"/"+ model.getImagesUrl()).into(holder.image);
 
 
         } else if (model.getPostType().equalsIgnoreCase("video")) {

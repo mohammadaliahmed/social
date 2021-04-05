@@ -5,25 +5,6 @@
     android:background="#fff"
     android:orientation="vertical">
 
-    <RelativeLayout
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="#fff">
-
-
-        <TextView
-            android:id="@+id/personName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
-            android:text="Chats"
-            android:textColor="#000"
-            android:textSize="20sp" />
-
-
-    </RelativeLayout>
 
     <EditText
         android:id="@+id/search"

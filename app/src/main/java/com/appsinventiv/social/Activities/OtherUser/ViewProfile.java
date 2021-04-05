@@ -400,10 +400,10 @@ public class ViewProfile extends AppCompatActivity {
 
 
     private void setupUi(UserModel userModel, int friendCount) {
-        Glide.with(this).load(AppConfig.BASE_URL_Image + userModel.getThumbnailUrl()).placeholder(R.drawable.ic_profile_plc).into(profilePic);
+        Glide.with(this).load(AppConfig.BASE_URL_Image +userModel.getUsername()+"/"+ userModel.getThumbnailUrl()).placeholder(R.drawable.ic_profile_plc).into(profilePic);
         name.setText(userModel.getName());
         friendsCount.setText("" + friendCount);
-        this.setTitle(userModel.getName());
+        this.setTitle(userModel.getUsername());
 
 
         if (SharedPrefs.getUserModel().getFriendsList() != null) {

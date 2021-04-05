@@ -99,7 +99,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHo
                 context.startActivity(i);
             }
         });
-        Glide.with(context).load(AppConfig.BASE_URL_Image + userModel.getThumbnailUrl()).into(viewHolder.picture);
+        Glide.with(context).load(AppConfig.BASE_URL_Image +userModel.getUserName()+"/"+ userModel.getThumbnailUrl()).placeholder(R.drawable.ic_profile_plc).into(viewHolder.picture);
 
 
     }

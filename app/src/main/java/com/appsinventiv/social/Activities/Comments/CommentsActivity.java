@@ -76,7 +76,7 @@ public class CommentsActivity extends AppCompatActivity implements NotificationO
         send = findViewById(R.id.send);
 
         postId = getIntent().getIntExtra("postId", 0);
-        Glide.with(this).load(AppConfig.BASE_URL_Image + SharedPrefs.getUserModel().getThumbnailUrl()).into(img);
+        Glide.with(this).load(AppConfig.BASE_URL_Image +SharedPrefs.getUserModel().getUsername()+"/"+ SharedPrefs.getUserModel().getThumbnailUrl()).into(img);
 
         recyclerview.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         adapter = new CommentsAdapter(this, commentsList);

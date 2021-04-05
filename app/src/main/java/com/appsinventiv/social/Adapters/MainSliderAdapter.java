@@ -27,11 +27,13 @@ public class MainSliderAdapter extends PagerAdapter {
     LayoutInflater layoutInflater;
     List<String> picturesList;
     ClicksCallback callback;
+    String username;
 
-    public MainSliderAdapter(Context context, List<String> picturesList, ClicksCallback callback) {
+    public MainSliderAdapter(Context context, List<String> picturesList, String username, ClicksCallback callback) {
         super();
         this.context = context;
         this.picturesList = picturesList;
+        this.username = username;
         this.callback = callback;
     }
 
@@ -49,7 +51,7 @@ public class MainSliderAdapter extends PagerAdapter {
 
         View view = layoutInflater.inflate(R.layout.main_product_slider, container, false);
         ImageView imageView = view.findViewById(R.id.slider_image);
-        Glide.with(context).load(AppConfig.BASE_URL_Image + picturesList.get(position)).into(imageView);
+        Glide.with(context).load(AppConfig.BASE_URL_Image + username + "/" + picturesList.get(position)).into(imageView);
         container.addView(view);
         callback.onPicChanged(position);
         imageView.setOnTouchListener(new ImageMatrixTouchHandler(context));

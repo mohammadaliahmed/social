@@ -52,7 +52,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
         final CommentsModel model = itemList.get(position);
 
         try {
-            Glide.with(context).load(AppConfig.BASE_URL_Image + model.getUser().getThumbnailUrl()).into(holder.image);
+            Glide.with(context).load(AppConfig.BASE_URL_Image + model.getUser().getUsername() + "/" + model.getUser().getThumbnailUrl()).into(holder.image);
         } catch (Exception e) {
 
         }

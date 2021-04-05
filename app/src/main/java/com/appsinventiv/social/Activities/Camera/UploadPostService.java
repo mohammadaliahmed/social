@@ -22,10 +22,12 @@ import com.google.gson.JsonObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -98,11 +100,17 @@ public class UploadPostService extends Service {
         UserClient service = AppConfig.getRetrofit().create(UserClient.class);
 
         RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), file);
-        MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("photo", file.getName(), requestBody);
-        RequestBody filename = RequestBody.create(MediaType.parse("text/plain"), file.getName());
+        RequestBody token = RequestBody.create(
+                MediaType.parse("text/plain"), "token_string");
 
+        MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("photo", file.getName(), requestBody);
+        RequestBody username = RequestBody.create(MediaType.parse("text/plain"), SharedPrefs.getUserModel().getUsername());
+        HashMap<String, RequestBody> map = new HashMap<>();
+        map.put("token", token);
+        map.put("photo", requestBody);
+        map.put("username", username);
         // finally, execute the request
-        Call<ResponseBody> call = service.uploadFile(fileToUpload, filename);
+        Call<ResponseBody> call = service.uploadFile1(fileToUpload, map);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

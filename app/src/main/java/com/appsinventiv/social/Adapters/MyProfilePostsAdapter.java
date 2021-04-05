@@ -49,7 +49,7 @@ public class MyProfilePostsAdapter extends RecyclerView.Adapter<MyProfilePostsAd
         if (model.getPostType().equalsIgnoreCase("image")) {
             holder.videoIcon.setVisibility(View.GONE);
             holder.multiIcon.setVisibility(View.GONE);
-            Glide.with(context).load(AppConfig.BASE_URL_Image + model.getImagesUrl()).into(holder.image);
+            Glide.with(context).load(AppConfig.BASE_URL_Image +model.getUserModel().getUsername()+"/"+ model.getImagesUrl()).into(holder.image);
 
 
         } else if (model.getPostType().equalsIgnoreCase("video")) {
@@ -57,13 +57,13 @@ public class MyProfilePostsAdapter extends RecyclerView.Adapter<MyProfilePostsAd
             holder.multiIcon.setVisibility(View.GONE);
 
 
-            Glide.with(context).load(AppConfig.BASE_URL_Image+model.getVideo_image_url()).into(holder.image);
+            Glide.with(context).load(AppConfig.BASE_URL_Image + model.getUserModel().getUsername() + "/" + model.getVideo_image_url()).into(holder.image);
         } else if (model.getPostType().equalsIgnoreCase("multi")) {
 
             holder.videoIcon.setVisibility(View.GONE);
             holder.multiIcon.setVisibility(View.VISIBLE);
             final List<String> list = new ArrayList<String>(Arrays.asList(model.getImagesUrl().split(",")));
-            Glide.with(context).load(AppConfig.BASE_URL_Image + list.get(0)).into(holder.image);
+            Glide.with(context).load(AppConfig.BASE_URL_Image +model.getUserModel().getUsername()+"/"+ list.get(0)).into(holder.image);
 
         }
         holder.itemView.setOnClickListener(new View.OnClickListener() {

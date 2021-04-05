@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.appsinventiv.social.Activities.Camera.PhotoRedirectActivity;
+import com.appsinventiv.social.Activities.Chat.ChatActivity;
 import com.appsinventiv.social.Activities.MainActivity;
 import com.appsinventiv.social.Activities.OtherUser.ViewProfile;
 import com.appsinventiv.social.Activities.Stories.AddStoryActivity;
@@ -45,6 +46,7 @@ import com.google.gson.JsonObject;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -80,7 +82,7 @@ public class HomeFragment extends Fragment {
     private RecyclerView recycler;
     private ArrayList<String> mSelected = new ArrayList<>();
     public static List<Integer> likesList = new ArrayList<>();
-    ImageView circleImg;
+    ImageView circleImg, chat, camera;
     CardView noPosts;
     Button createPost;
 
@@ -99,6 +101,8 @@ public class HomeFragment extends Fragment {
         circleImg = rootView.findViewById(R.id.circleImg);
         userPic = rootView.findViewById(R.id.userPic);
         createPost = rootView.findViewById(R.id.createPost);
+        chat = rootView.findViewById(R.id.chat);
+        camera = rootView.findViewById(R.id.camera);
         plusImg = rootView.findViewById(R.id.plusImg);
         noPosts = rootView.findViewById(R.id.noPosts);
         friendsStories = rootView.findViewById(R.id.friendsStories);
@@ -110,6 +114,18 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 openGallery();
+            }
+        });
+        camera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openGallery();
+            }
+        });
+        chat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getContext(), ChatActivity.class));
             }
         });
 
@@ -127,7 +143,7 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        Glide.with(context).load(AppConfig.BASE_URL_Image + SharedPrefs.getUserModel().getThumbnailUrl()).placeholder(R.drawable.ic_profile_plc).into(userPic);
+        Glide.with(context).load(AppConfig.BASE_URL_Image + SharedPrefs.getUserModel().getUsername() + "/" + SharedPrefs.getUserModel().getThumbnailUrl()).placeholder(R.drawable.ic_profile_plc).into(userPic);
         userPic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -231,6 +247,7 @@ public class HomeFragment extends Fragment {
         if (list == null) {
             list = new ArrayList<>();
         }
+
 
         storiesAdapter = new HomeStoriesAdapter(context, list, new HomeStoriesAdapter.HomeStoriesAdapterCallbacks() {
             @Override
@@ -391,7 +408,17 @@ public class HomeFragment extends Fragment {
                         }
                         if (MainActivity.storiesHasMap.size() > 0) {
                             MainActivity.arrayLists.clear();
-                            MainActivity.arrayLists.addAll(MainActivity.storiesHasMap.values());
+                            ArrayList<ArrayList<StoryModel>> listtt = new ArrayList<>(MainActivity.storiesHasMap.values());
+                            Collections.sort(listtt, new Comparator<ArrayList<StoryModel>>() {
+                                @Override
+                                public int compare(ArrayList<StoryModel> listData, ArrayList<StoryModel> t1) {
+                                    Long ob1 = listData.get(listData.size() - 1).getTime();
+                                    Long ob2 = t1.get(t1.size() - 1).getTime();
+                                    return ob2.compareTo(ob1);
+
+                                }
+                            });
+                            MainActivity.arrayLists.addAll(listtt);
                             SharedPrefs.setHomeStories(MainActivity.arrayLists);
                         } else {
                             MainActivity.arrayLists = new ArrayList<>();
